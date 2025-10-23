@@ -1,4 +1,4 @@
-! pip install ultralytics tensorflow pillow numpy opencv-python-headless
+pip install ultralytics tensorflow pillow numpy opencv-python-headless
 import streamlit as st
 from ultralytics import YOLO
 import tensorflow as tf
