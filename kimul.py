@@ -11,9 +11,9 @@ import cv2
 # ==========================
 @st.cache_resource
 def load_models():
-    # Pastikan path model sesuai
-    yolo_model = YOLO("model/best.pt")  # Model deteksi objek YOLOv8
-    classifier = tf.keras.models.load_model("model/classifier_model.h5")  # Model klasifikasi
+    # Ganti path model sesuai file yang kamu upload
+    yolo_model = YOLO("/mnt/data/57f21829-db26-4841-8055-021669ecf703.pt")  # YOLOv8 model
+    classifier = tf.keras.models.load_model("/mnt/data/0ea8f8df-32bd-497d-80f2-82a0f7b3549c.h5")  # Keras classifier
     return yolo_model, classifier
 
 yolo_model, classifier = load_models()
@@ -39,7 +39,7 @@ if uploaded_file is not None:
         # Jalankan deteksi objek
         results = yolo_model(img)
         result_img = results[0].plot()  # hasil deteksi (numpy array BGR)
-        result_img_rgb = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)  # konversi agar bisa ditampilkan
+        result_img_rgb = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)
         st.image(result_img_rgb, caption="Hasil Deteksi", use_container_width=True)
 
     elif menu == "Klasifikasi Gambar":
