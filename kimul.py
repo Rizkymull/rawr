@@ -1,16 +1,11 @@
 import streamlit as st
-from PIL import Image
+import pandas as pd
 import numpy as np
-from ultralytics import YOLO
+import PIL.Image as Image
 import tensorflow as tf
-from tensorflow.keras.preprocessing import image
-import os
-
-try:
-    import cv2
-except ImportError:
-    cv2 = None
-    print("⚠️ OpenCV tidak tersedia, mode deteksi gambar mungkin tidak berfungsi.")
+import tensorflow_hub as hub
+import cv2
+import urllib
 
 # ==========================
 # Load Models
