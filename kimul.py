@@ -33,26 +33,24 @@ menu = st.sidebar.selectbox(
 uploaded_file = st.file_uploader("Unggah Gambar", type=["jpg", "jpeg", "png"])
 
 
-if uploaded_file is not None:
-    # Baca gambar
-    img = Image.open(uploaded_file).convert("RGB")
-    st.image(img, caption="Gambar yang Diupload", use_container_width=True)
-
-    if menu == "Deteksi Objek (YOLO)":
-        try:
-            # Jalankan deteksi objek
-            results = yolo_model(img)
-            result_img = results[0].plot()  # hasil deteksi (numpy array BGR)
-
-            # Pastikan hasil tidak None
+if menu == "Deteksi Objek (YOLO)":
+    try:
+        # Jalankan deteksi objek
+        results = yolo_model(img)
+        
+        # Pastikan ada hasil deteksi
+        if len(results) > 0 and hasattr(results[0], "plot"):
+            result_img = results[0].plot()  # numpy array BGR
             if result_img is not None:
                 result_img_rgb = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)
                 st.image(result_img_rgb, caption="Hasil Deteksi", use_container_width=True)
             else:
-                st.warning("⚠️ Tidak ada hasil deteksi dari model YOLO.")
-
-        except Exception as e:
-            st.error(f"❌ Terjadi kesalahan saat deteksi objek: {e}")
+                st.warning("⚠️ Tidak ada hasil deteksi yang bisa ditampilkan.")
+        else:
+            st.warning("⚠️ Model YOLO tidak mengembalikan hasil deteksi.")
+    
+    except Exception as e:
+        st.error(f"❌ Terjadi kesalahan saat deteksi objek: {e}")
 
     elif menu == "Klasifikasi Gambar":
         try:
