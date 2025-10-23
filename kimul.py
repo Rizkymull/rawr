@@ -46,8 +46,11 @@ if menu == "Deteksi Objek (YOLO)":
         if len(results) > 0 and hasattr(results[0], "plot"):
             result_img = results[0].plot()  # numpy array BGR
             if result_img is not None:
-                result_img_rgb = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)
-                st.image(result_img_rgb, caption="Hasil Deteksi", use_container_width=True)
+                if cv2 is not None and result_img is not None:
+    result_img_rgb = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)
+    st.image(result_img_rgb, caption="Hasil Deteksi", use_container_width=True)
+else:
+    st.warning("⚠️ OpenCV tidak tersedia atau hasil deteksi kosong.")
             else:
                 st.warning("⚠️ Tidak ada hasil deteksi yang bisa ditampilkan.")
         else:
