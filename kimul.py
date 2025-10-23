@@ -14,8 +14,8 @@ import os
 @st.cache_resource
 def load_models():
     # Path model disesuaikan dengan lokasi file
-    yolo_model = YOLO("best.pt")  # Ganti sesuai struktur folder GitHub kamu
-    classifier = tf.keras.models.load_model("muhammad rizki mulia_Laporan 2.h")
+    yolo_model = YOLO("model/best.pt")  # Ganti sesuai struktur folder GitHub kamu
+    classifier = tf.keras.models.load_model("model/muhammad rizki mulia_Laporan 2.h")
     return yolo_model, classifier
 
 yolo_model, classifier = load_models()
