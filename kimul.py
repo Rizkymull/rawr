@@ -5,7 +5,6 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 import os
-import cv2
 from ultralytics import YOLO
 
 # ==========================
@@ -19,7 +18,6 @@ st.set_page_config(page_title="🧠 Deteksi & Klasifikasi Gambar", layout="cente
 @st.cache_resource
 def load_models():
     """Memuat model YOLO dan model klasifikasi dari folder lokal"""
-    # Pastikan folder model tersedia
     model_folder = "model"
     os.makedirs(model_folder, exist_ok=True)
 
@@ -27,7 +25,7 @@ def load_models():
     yolo_path = os.path.join(model_folder, "best.pt")
     classifier_path = os.path.join(model_folder, "muhammad rizki mulia_Laporan 2.h5")
 
-    # Pastikan kedua file model ada
+    # Pastikan file model tersedia
     if not os.path.exists(yolo_path):
         st.error(f"❌ File YOLO tidak ditemukan di: {yolo_path}")
         st.stop()
@@ -38,10 +36,8 @@ def load_models():
     # Load model
     yolo_model = YOLO(yolo_path)
     classifier = tf.keras.models.load_model(classifier_path)
-
     return yolo_model, classifier
 
-# Panggil fungsi load_models
 yolo_model, classifier = load_models()
 
 # ==========================
@@ -66,6 +62,7 @@ def preprocess_image(image):
 # UI
 # ==========================
 st.title("🚀 Aplikasi Deteksi & Klasifikasi Gambar")
+st.markdown("Unggah gambar untuk mendeteksi objek (YOLO) atau mengklasifikasikan jenis gambar (Cars, Planes, Trains).")
 
 menu = st.sidebar.selectbox(
     "Pilih Mode:",
@@ -88,10 +85,11 @@ if menu == "Deteksi Objek (YOLO)" and image is not None:
         st.subheader("🔍 Hasil Deteksi Objek (YOLO)")
         results = yolo_model.predict(np.array(image))
 
+        # Ambil gambar hasil plot langsung dari YOLO (tanpa cv2)
         if len(results) > 0 and hasattr(results[0], "plot"):
             result_img = results[0].plot()
-            result_img_rgb = cv2.cvtColor(result_img, cv2.COLOR_BGR2RGB)
-            st.image(result_img_rgb, caption="Hasil Deteksi", use_container_width=True)
+            result_pil = Image.fromarray(result_img[..., ::-1])  # konversi BGR → RGB via slicing, tanpa cv2
+            st.image(result_pil, caption="Hasil Deteksi", use_container_width=True)
         else:
             st.warning("⚠️ Tidak ada hasil deteksi yang bisa ditampilkan.")
     except Exception as e:
@@ -126,8 +124,7 @@ elif menu == "Klasifikasi Gambar" and image is not None:
 
     except Exception as e:
         st.error(f"❌ Terjadi kesalahan saat klasifikasi: {e}")
+
 else:
     st.info("📷 Silakan unggah gambar terlebih dahulu.")
-
-
 
