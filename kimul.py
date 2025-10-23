@@ -6,7 +6,11 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import os
 
-
+try:
+    import cv2
+except ImportError:
+    cv2 = None
+    print("⚠️ OpenCV tidak tersedia, mode deteksi gambar mungkin tidak berfungsi.")
 
 # ==========================
 # Load Models
