@@ -1,6 +1,3 @@
-git add requirements.txt
-git commit -m "update requirements for Streamlit Cloud"
-git push
 import streamlit as st
 from ultralytics import YOLO
 import tensorflow as tf
