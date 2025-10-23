@@ -1,3 +1,4 @@
+pip install opencv-python-headless
 import streamlit as st
 from ultralytics import YOLO
 import tensorflow as tf
@@ -5,6 +6,7 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 from PIL import Image
 import cv2
+
 
 # ==========================
 # Load Models
