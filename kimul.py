@@ -1,4 +1,3 @@
-pip install ultralytics tensorflow pillow numpy opencv-python-headless
 import streamlit as st
 from ultralytics import YOLO
 import tensorflow as tf
@@ -6,17 +5,15 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 from PIL import Image
 import cv2
-pip install ultralytics tensorflow pillow numpy opencv-python-headless
-
 
 # ==========================
 # Load Models
 # ==========================
 @st.cache_resource
 def load_models():
-    # Ganti path model sesuai file yang kamu upload
-    yolo_model = YOLO("/mnt/data/57f21829-db26-4841-8055-021669ecf703.pt")  # YOLOv8 model
-    classifier = tf.keras.models.load_model("/mnt/data/0ea8f8df-32bd-497d-80f2-82a0f7b3549c.h5")  # Keras classifier
+    # Path model disesuaikan dengan lokasi file
+    yolo_model = YOLO("model/best.pt")  # Ganti sesuai struktur folder GitHub kamu
+    classifier = tf.keras.models.load_model("model/classifier_model.h5")
     return yolo_model, classifier
 
 yolo_model, classifier = load_models()
