@@ -6,58 +6,14 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import os
 
-# ==========================
-# 🌌 CONFIG & STYLE
-# ==========================
-st.set_page_config(page_title="AI Klasifikasi Ekspresi & Digit", page_icon="🤖", layout="wide")
+# Konfigurasi halaman
+st.set_page_config(page_title="Klasifikasi Gambar", layout="centered")
 
-st.markdown("""
-<style>
-body {
-    background: radial-gradient(circle at top, #0F2027, #203A43, #2C5364);
-    color: white;
-    font-family: 'Poppins', sans-serif;
-}
-.title {
-    text-align: center; 
-    font-size: 38px; 
-    font-weight: 800; 
-    color: #A5D7E8;
-    text-shadow: 0px 0px 10px #00FFFF;
-}
-.subheader {
-    text-align: center; 
-    font-size: 18px; 
-    color: #D9EAFD;
-    margin-top: -10px;
-}
-.glass-box {
-    background: rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 4px 25px rgba(0,255,255,0.15);
-    text-align: center;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease-in-out;
-}
-.glass-box:hover {
-    box-shadow: 0 0 25px #00FFFF;
-    transform: scale(1.02);
-}
-.neon-text {
-    color: #00FFFF;
-    text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF;
-    font-weight: bold;
-    font-size: 22px;
-}
-.footer {
-    text-align: center;
-    color: #B0E0E6;
-    font-size: 13px;
-    margin-top: 40px;
-}
-</style>
-""", unsafe_allow_html=True)
+# Inisialisasi session state
+if 'use_camera' not in st.session_state:
+    st.session_state.use_camera = False
+if 'camera_image' not in st.session_state:
+    st.session_state.camera_image = None
 
 # ==========================
 # 🚀 LOAD MODELS
