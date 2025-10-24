@@ -14,8 +14,8 @@ st.title("🧠 Klasifikasi Gambar Sederhana")
 # ==========================
 @st.cache_resource
 def load_models():
-    yolo_path = "model/best.pt"      # model YOLO (misal untuk deteksi objek)
-    keras_path = "model/muhammad rizki mulia_Laporan 2.h5"  # model Keras (misal untuk klasifikasi gambar)
+    yolo_path = "model/best.pt"      # model YOLO (deteksi)
+    keras_path = "model/muhammad rizki mulia_Laporan 2.h5"  # model Keras (klasifikasi)
 
     if not os.path.exists(yolo_path):
         st.error("❌ Model YOLO (.pt) tidak ditemukan.")
@@ -42,45 +42,54 @@ if uploaded_file:
     # ==========================
     # YOLO DETECTION
     # ==========================
-st.subheader("🔍 Hasil Deteksi (YOLO)")
-try:
-    results = yolo_model(img)
-    annotated_img = results[0].plot()
-    st.image(annotated_img, caption="Hasil Deteksi", use_container_width=True)
+    st.subheader("🔍 Hasil Deteksi (YOLO)")
+    try:
+        results = yolo_model(img)                     # jalankan YOLO
+        annotated_img = results[0].plot()
+        st.image(annotated_img, caption="Hasil Deteksi", use_container_width=True)
 
-    # Ambil bounding box terbaik
-    boxes = results[0].boxes
-    if len(boxes) > 0:
-        best_box = boxes[np.argmax([float(b.conf[0]) for b in boxes])]
-        x1, y1, x2, y2 = map(int, best_box.xyxy[0])
-        cropped_img = img.crop((x1, y1, x2, y2))
-        st.image(cropped_img, caption="🧩 Area hasil deteksi (crop dari YOLO)", use_container_width=True)
-    else:
-        st.warning("Tidak ada objek terdeteksi, klasifikasi akan menggunakan gambar penuh.")
-        cropped_img = img
+        # Ambil bounding box terbaik (confidence tertinggi)
+        boxes = results[0].boxes
+        if len(boxes) > 0:
+            best_box = boxes[np.argmax([float(b.conf[0]) for b in boxes])]
+            x1, y1, x2, y2 = map(int, best_box.xyxy[0])
+            cropped_img = img.crop((x1, y1, x2, y2))
+            st.image(cropped_img, caption="🧩 Area hasil deteksi (crop dari YOLO)", use_container_width=True)
+        else:
+            st.warning("Tidak ada objek terdeteksi, klasifikasi akan menggunakan gambar penuh.")
+            cropped_img = img
 
-except Exception as e:  # ✅ jangan lupa baris ini
-    st.error(f"❌ Error deteksi YOLO: {e}")
+    except Exception as e:
+        st.error(f"❌ Error deteksi YOLO: {e}")
+        # Jika deteksi gagal, kita hentikan proses klasifikasi selanjutnya
+        cropped_img = None
 
     # ==========================
-    # KERAS CLASSIFICATION
+    # KERAS CLASSIFICATION (hanya jika cropped_img tersedia)
     # ==========================
-    st.subheader("🔢 Hasil Klasifikasi (Keras)")
-try:
-    # Daftar nama kelas sesuai urutan saat pelatihan model
-    class_names = ["Alligator", "Gharial", "Crocodile"]
+    if cropped_img is not None:
+        st.subheader("🔢 Hasil Klasifikasi (Keras)")
+        try:
+            # Pastikan urutan class_names sama dengan urutan saat training model Keras
+            class_names = ["gharial", "alligator", "crocodile"]
 
-    # Sesuaikan ukuran input dengan model kamu
-    target_size = (128, 128)
-    proc_img = cropped_img.resize(target_size)
-    img_array = np.expand_dims(np.array(proc_img) / 255.0, axis=0)
+            # Sesuaikan ukuran input dengan model kamu (contoh: 128x128)
+            target_size = (128, 128)
+            proc_img = cropped_img.resize(target_size)
+            img_array = np.expand_dims(np.array(proc_img) / 255.0, axis=0)
 
-    prediction = keras_model.predict(img_array)
-    pred_index = np.argmax(prediction[0])
-    pred_name = class_names[pred_index]
-    confidence = np.max(prediction[0]) * 100
+            prediction = keras_model.predict(img_array)
+            pred_index = np.argmax(prediction[0])
+            pred_name = class_names[pred_index]
+            confidence = np.max(prediction[0]) * 100
 
-    st.success(f"Hasil Prediksi: **{pred_name.capitalize()}** 🐊 (Akurasi: {confidence:.2f}%)")
+            st.success(f"Hasil Prediksi: **{pred_name.capitalize()}** 🐊 (Akurasi: {confidence:.2f}%)")
 
-except Exception as e:
-    st.error(f"❌ Error klasifikasi Keras: {e}")
+            # Debug (opsional): tampilkan skor mentah
+            # st.write("Raw prediction:", prediction[0])
+
+        except Exception as e:
+            st.error(f"❌ Error klasifikasi Keras: {e}")
+
+else:
+    st.info("⬆ Silakan unggah gambar terlebih dahulu.")
