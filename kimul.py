@@ -54,20 +54,21 @@ if uploaded_file:
     # KERAS CLASSIFICATION
     # ==========================
     st.subheader("🔢 Hasil Klasifikasi (Keras)")
-    try:
-        # Sesuaikan ukuran input dengan model kamu
-        target_size = (128, 128)
-        proc_img = img.resize(target_size)
-        img_array = np.expand_dims(np.array(proc_img) / 255.0, axis=0)
+try:
+    # Daftar nama kelas sesuai urutan saat pelatihan model
+    class_names = ["gharial", "alligator", "crocodile"]
 
-        prediction = keras_model.predict(img_array)
-        pred_label = np.argmax(prediction[0])
-        confidence = np.max(prediction[0]) * 100
+    # Sesuaikan ukuran input dengan model kamu
+    target_size = (128, 128)
+    proc_img = img.resize(target_size)
+    img_array = np.expand_dims(np.array(proc_img) / 255.0, axis=0)
 
-        st.success(f"Hasil Prediksi: **{pred_label}** (Akurasi: {confidence:.2f}%)")
+    prediction = keras_model.predict(img_array)
+    pred_index = np.argmax(prediction[0])
+    pred_name = class_names[pred_index]
+    confidence = np.max(prediction[0]) * 100
 
-    except Exception as e:
-        st.error(f"❌ Error klasifikasi Keras: {e}")
+    st.success(f"Hasil Prediksi: **{pred_name.capitalize()}** 🐊 (Akurasi: {confidence:.2f}%)")
 
-else:
-    st.info("⬆ Silakan unggah gambar terlebih dahulu.")
+except Exception as e:
+    st.error(f"❌ Error klasifikasi Keras: {e}")
