@@ -56,7 +56,7 @@ if uploaded_file:
     st.subheader("🔢 Hasil Klasifikasi (Keras)")
     try:
         # Sesuaikan ukuran input dengan model kamu
-        target_size = (64, 64)
+        target_size = (128, 128)
         proc_img = img.resize(target_size)
         img_array = np.expand_dims(np.array(proc_img) / 255.0, axis=0)
 
