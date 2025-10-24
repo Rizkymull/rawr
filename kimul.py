@@ -15,7 +15,7 @@ st.title("🧠 Klasifikasi Gambar Sederhana")
 @st.cache_resource
 def load_models():
     yolo_path = "model/best.pt"      # model YOLO (misal untuk deteksi objek)
-    keras_path = "model/modelku.h5"  # model Keras (misal untuk klasifikasi gambar)
+    keras_path = "model/muhammad rizki mulia_Laporan 2.h5"  # model Keras (misal untuk klasifikasi gambar)
 
     if not os.path.exists(yolo_path):
         st.error("❌ Model YOLO (.pt) tidak ditemukan.")
