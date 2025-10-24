@@ -47,6 +47,18 @@ if uploaded_file:
         results = yolo_model(img)
         annotated_img = results[0].plot()
         st.image(annotated_img, caption="Hasil Deteksi", use_container_width=True)
+        # Ambil bounding box terbaik dari hasil YOLO
+boxes = results[0].boxes
+
+if len(boxes) > 0:
+    # Ambil kotak dengan nilai confidence tertinggi
+    best_box = boxes[np.argmax([float(b.conf[0]) for b in boxes])]
+    x1, y1, x2, y2 = map(int, best_box.xyxy[0])
+    cropped_img = img.crop((x1, y1, x2, y2))
+    st.image(cropped_img, caption="🧩 Area hasil deteksi (crop dari YOLO)", use_container_width=True)
+else:
+    st.warning("Tidak ada objek terdeteksi, klasifikasi akan menggunakan gambar penuh.")
+    cropped_img = img
     except Exception as e:
         st.error(f"❌ Error deteksi YOLO: {e}")
 
@@ -60,7 +72,7 @@ try:
 
     # Sesuaikan ukuran input dengan model kamu
     target_size = (128, 128)
-    proc_img = img.resize(target_size)
+    proc_img = cropped_img.resize(target_size)
     img_array = np.expand_dims(np.array(proc_img) / 255.0, axis=0)
 
     prediction = keras_model.predict(img_array)
