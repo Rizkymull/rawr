@@ -88,10 +88,6 @@ st.markdown("<div class='subheader'>Proyek UTS – Big Data & Artificial Intelli
 st.write("")
 
 st.sidebar.header("⚙ Pengaturan")
-if os.path.exists("LOGO USK.png"):
-    st.sidebar.image("LOGO USK.png", width=150)
-else:
-    st.sidebar.info("📘 Logo belum tersedia")
 
 menu = st.sidebar.radio("Pilih Mode Analisis:", ["Ekspresi Wajah", "Digit Angka"])
 st.sidebar.markdown("---")
