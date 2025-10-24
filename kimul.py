@@ -64,32 +64,37 @@ if uploaded_file:
         # Jika deteksi gagal, kita hentikan proses klasifikasi selanjutnya
         cropped_img = None
 
-    # ==========================
-    # KERAS CLASSIFICATION (hanya jika cropped_img tersedia)
-    # ==========================
-    if cropped_img is not None:
-        st.subheader("🔢 Hasil Klasifikasi (Keras)")
-        try:
-            # Pastikan urutan class_names sama dengan urutan saat training model Keras
-            class_names = ["gharial", "alligator", "crocodile"]
+  # ==========================
+# YOLO DETECTION
+# ==========================
+st.subheader("🔍 Hasil Deteksi (YOLO)")
+try:
+    results = yolo_model(img)
+    annotated_img = results[0].plot()
+    st.image(annotated_img, caption="Hasil Deteksi", use_container_width=True)
 
-            # Sesuaikan ukuran input dengan model kamu (contoh: 128x128)
-            target_size = (128, 128)
-            proc_img = cropped_img.resize(target_size)
-            img_array = np.expand_dims(np.array(proc_img) / 255.0, axis=0)
+    boxes = results[0].boxes
+    names = results[0].names  # daftar nama kelas YOLO
 
-            prediction = keras_model.predict(img_array)
-            pred_index = np.argmax(prediction[0])
-            pred_name = class_names[pred_index]
-            confidence = np.max(prediction[0]) * 100
+    if len(boxes) > 0:
+        # Ambil box dengan confidence tertinggi
+        best_box = boxes[np.argmax([float(b.conf[0]) for b in boxes])]
+        x1, y1, x2, y2 = map(int, best_box.xyxy[0])
+        cls_id = int(best_box.cls[0])
+        yolo_label = names[cls_id]
+        conf = float(best_box.conf[0])
 
-            st.success(f"Hasil Prediksi: **{pred_name.capitalize()}** 🐊 (Akurasi: {confidence:.2f}%)")
+        # Crop hasil deteksi untuk tampilan
+        cropped_img = img.crop((x1, y1, x2, y2))
+        st.image(cropped_img, caption="🧩 Area hasil deteksi (crop dari YOLO)", use_container_width=True)
 
-            # Debug (opsional): tampilkan skor mentah
-            # st.write("Raw prediction:", prediction[0])
+        # ✅ Hasil akhir mengikuti YOLO
+        st.subheader("🔢 Hasil Klasifikasi (Mengikuti YOLO)")
+        st.success(f"Hasil Prediksi: **{yolo_label.capitalize()}** 🐊 (Akurasi YOLO: {conf*100:.2f}%)")
 
-        except Exception as e:
-            st.error(f"❌ Error klasifikasi Keras: {e}")
+    else:
+        st.warning("Tidak ada objek terdeteksi, klasifikasi akan menggunakan gambar penuh.")
+        yolo_label = "Tidak terdeteksi"
 
-else:
-    st.info("⬆ Silakan unggah gambar terlebih dahulu.")
+except Exception as e:
+    st.error(f"❌ Error deteksi YOLO: {e}")
