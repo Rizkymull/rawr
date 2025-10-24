@@ -65,7 +65,7 @@ body {
 @st.cache_resource
 def load_models():
     face_path = "model/best.pt"
-    digit_path = "model/INELUTFIATULHANIFAH_LAPORAN 2.h5"
+    digit_path = "muhammad rizki mulia_Laporan 2.h5"
 
     if not os.path.exists(face_path):
         st.error("❌ Model ekspresi wajah (.pt) tidak ditemukan.")
