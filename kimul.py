@@ -69,7 +69,7 @@ if uploaded_file:
             # ==========================
             # HASIL KLASIFIKASI (SINKRON YOLO)
             # ==========================
-            st.subheader("🔢 Hasil Klasifikasi (Mengikuti YOLO)")
+            st.subheader("🔢 Hasil Klasifikasi")
             st.success(f"Hasil Prediksi: **{yolo_label.capitalize()}** 🐊 (Akurasi YOLO: {conf*100:.2f}%)")
 
         else:
