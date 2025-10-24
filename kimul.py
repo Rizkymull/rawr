@@ -56,7 +56,7 @@ if uploaded_file:
     st.subheader("🔢 Hasil Klasifikasi (Keras)")
 try:
     # Daftar nama kelas sesuai urutan saat pelatihan model
-    class_names = ["gharial", "alligator", "crocodile"]
+    class_names = ["Alligator", "Gharial", "Crocodile"]
 
     # Sesuaikan ukuran input dengan model kamu
     target_size = (128, 128)
