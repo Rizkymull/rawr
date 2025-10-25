@@ -1,106 +1,82 @@
 import streamlit as st
+from PIL import Image
+import numpy as np
 from ultralytics import YOLO
 import tensorflow as tf
-from tensorflow.keras.preprocessing import image
-import numpy as np
-from PIL import Image
-import cv2
-import tempfile
 import os
 
 # ==========================
-# Fungsi Load Model
+# KONFIGURASI HALAMAN
+# ==========================
+st.set_page_config(page_title="Klasifikasi Gambar", layout="centered")
+st.title("🧠 Klasifikasi Gambar Berdasarkan YOLO")
+
+# ==========================
+# LOAD MODEL
 # ==========================
 @st.cache_resource
 def load_models():
-    try:
-        yolo_model = YOLO("model/best.pt")  # Model deteksi objek
-    except Exception as e:
-        st.error(f"Gagal memuat YOLO model: {e}")
-        yolo_model = None
+    yolo_path = "model/best.pt"      # model YOLO
+    keras_path = "model/muhammad rizki mulia_Laporan 2.h5"  # model Keras (opsional)
 
-    try:
-        keras_model = tf.keras.models.load_model("model/classifier_model.h5")  # Model klasifikasi
-    except Exception as e:
-        st.error(f"Gagal memuat Keras model: {e}")
+    if not os.path.exists(yolo_path):
+        st.error("❌ Model YOLO (.pt) tidak ditemukan.")
+        st.stop()
+    if not os.path.exists(keras_path):
+        st.warning("⚠ Model Keras (.h5) tidak ditemukan. Hanya YOLO yang digunakan.")
         keras_model = None
+    else:
+        keras_model = tf.keras.models.load_model(keras_path)
 
+    yolo_model = YOLO(yolo_path)
     return yolo_model, keras_model
 
-
-# ==========================
-# Fungsi Prediksi
-# ==========================
-def predict_image(img, yolo_model, keras_model):
-    if yolo_model is None or keras_model is None:
-        st.warning("Model belum dimuat dengan benar.")
-        return None, None
-
-    # Simpan sementara gambar ke file untuk YOLO
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmpfile:
-        img.save(tmpfile.name)
-        results = yolo_model(tmpfile.name)
-        boxes = results[0].boxes.xyxy.cpu().numpy()
-        confs = results[0].boxes.conf.cpu().numpy()
-        labels = results[0].boxes.cls.cpu().numpy()
-    
-    # Ambil deteksi pertama saja (jika ada)
-    if len(boxes) > 0:
-        x1, y1, x2, y2 = boxes[0]
-        cropped_img = img.crop((x1, y1, x2, y2))
-        cropped_img = cropped_img.resize((224, 224))  # Sesuai input CNN
-
-        # Ubah ke numpy array
-        img_array = image.img_to_array(cropped_img)
-        img_array = np.expand_dims(img_array, axis=0)
-        img_array /= 255.0
-
-        # Prediksi Keras Model
-        pred = keras_model.predict(img_array)
-        class_idx = np.argmax(pred)
-        confidence = float(np.max(pred))
-        return class_idx, confidence
-    else:
-        st.warning("Tidak ada objek terdeteksi oleh YOLO.")
-        return None, None
-
-
-# ==========================
-# Aplikasi Streamlit
-# ==========================
-st.title("🔍 Deteksi & Klasifikasi Gambar")
-
-# Load model sekali saja
 yolo_model, keras_model = load_models()
 
-# Pilihan input: Kamera atau Upload
-input_choice = st.radio(
-    "Pilih sumber gambar:",
-    ["📸 Gunakan Kamera", "🖼️ Upload Foto"],
-    index=1
-)
+# ==========================
+# UPLOAD GAMBAR
+# ==========================
+uploaded_file = st.file_uploader("📤 Unggah gambar", type=["jpg", "jpeg", "png"])
 
-if input_choice == "📸 Gunakan Kamera":
-    uploaded_img = st.camera_input("Ambil gambar dengan kamera")
+if uploaded_file:
+    img = Image.open(uploaded_file).convert("RGB")
+    st.image(img, caption="🖼 Gambar Input", use_container_width=True)
+
+    # ==========================
+    # YOLO DETECTION
+    # ==========================
+    st.subheader("🔍 Hasil Deteksi (YOLO)")
+    try:
+        results = yolo_model(img)
+        annotated_img = results[0].plot()  # Gambar dengan bounding box
+        st.image(annotated_img, caption="Hasil Deteksi", use_container_width=True)
+
+        boxes = results[0].boxes
+        names = results[0].names  # Daftar nama kelas YOLO
+
+        if len(boxes) > 0:
+            # Ambil hasil deteksi dengan confidence tertinggi
+            best_box = boxes[np.argmax([float(b.conf[0]) for b in boxes])]
+            x1, y1, x2, y2 = map(int, best_box.xyxy[0])
+            cls_id = int(best_box.cls[0])
+            yolo_label = names[cls_id]
+            conf = float(best_box.conf[0])
+
+            # Crop area hasil deteksi
+            cropped_img = img.crop((x1, y1, x2, y2))
+            st.image(cropped_img, caption="🧩 Area hasil deteksi (crop dari YOLO)", use_container_width=True)
+
+            # ==========================
+            # HASIL KLASIFIKASI (SINKRON YOLO)
+            # ==========================
+            st.subheader("🔢 Hasil Klasifikasi")
+            st.success(f"Hasil Prediksi: *{yolo_label.capitalize()}* 🐊 (Akurasi YOLO: {conf*100:.2f}%)")
+
+        else:
+            st.warning("Tidak ada objek terdeteksi. Klasifikasi tidak dilakukan.")
+
+    except Exception as e:
+        st.error(f"❌ Error deteksi YOLO: {e}")
+
 else:
-    uploaded_img = st.file_uploader("Upload gambar (JPG/PNG)", type=["jpg", "jpeg", "png"])
-
-if uploaded_img is not None:
-    # Tampilkan gambar
-    img = Image.open(uploaded_img)
-    st.image(img, caption="Gambar Diuji", use_container_width=True)
-
-    # Tombol prediksi
-    if st.button("🔎 Prediksi"):
-        with st.spinner("Sedang memproses..."):
-            class_idx, confidence = predict_image(img, yolo_model, keras_model)
-
-            if class_idx is not None:
-                st.success(f"Hasil Prediksi: Kelas {class_idx} (Confidence: {confidence:.2f})")
-            else:
-                st.error("Gagal melakukan prediksi.")
-
-
-# Footer
-st.markdown("---")
-st.caption("© 2025 Sistem Deteksi & Klasifikasi Gambar - by Riski Mulya")
+    st.info("⬆ Silakan unggah gambar terlebih dahulu.")
