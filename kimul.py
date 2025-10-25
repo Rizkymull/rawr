@@ -102,39 +102,38 @@ Segera amankan diri dan hubungi pihak berwenang.
 # ==========================
 # ==== ☎ Kontak Resmi ====
 # ==========================
-st.markdown(
-    """
-    <div class="bksda-box">
-        <h3>📞 Panggilan Resmi Satwa & Keamanan</h3>
-
-        <div class="contact-section">
-            <b>1️⃣ BKSDA (Balai Konservasi Sumber Daya Alam)</b><br>
-            📱 <b>0813-4829-XXXX</b><br>
-            🌐 <a href="https://ksdae.menlhk.go.id" target="_blank" style="color:#9eff9e;">ksdae.menlhk.go.id</a><br>
-            📸 <a href="https://www.instagram.com/ksdae.menlhk" target="_blank" style="color:#9eff9e;">@ksdae.menlhk</a>
-        </div>
-        <hr style="border: 0.5px solid #2ecc71; margin:10px 0;">
-
-        <div class="contact-section">
-            <b>2️⃣ Pemadam Kebakaran (DAMKAR)</b><br>
-            📱 <b>113</b><br>
-            🌐 <a href="https://damkar.go.id" target="_blank" style="color:#9eff9e;">damkar.go.id</a><br>
-            📸 <a href="https://www.instagram.com/damkarindonesia" target="_blank" style="color:#9eff9e;">@damkarindonesia</a>
-        </div>
-        <hr style="border: 0.5px solid #2ecc71; margin:10px 0;">
-
-        <div class="contact-section">
-            <b>3️⃣ Kepolisian Negara Republik Indonesia (POLRI)</b><br>
-            📱 <b>110</b><br>
-            🌐 <a href="https://polri.go.id" target="_blank" style="color:#9eff9e;">polri.go.id</a><br>
-            📸 <a href="https://www.instagram.com/divisihumaspolri" target="_blank" style="color:#9eff9e;">@divisihumaspolri</a>
-        </div>
-
-        <br><i>Layanan Darurat 24 Jam — Jangan dekati satwa liar, segera hubungi pihak berwenang.</i>
+st.markdown("""
+<div style="background-color:#1e1e1e; padding:15px; border-radius:10px; color:#fff;">
+    <h3 style="color:#ff4b4b; text-align:center;">📞 Panggilan Resmi Satwa & Keamanan</h3>
+    
+    <div class="contact-section" style="margin-top:15px;">
+        <b>🦎 BKSDA (Balai Konservasi Sumber Daya Alam)</b><br>
+        ☎️ 0813-4829-XXXX<br>
+        🌐 <a href="https://ksdae.menlhk.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
+        📸 <a href="https://www.instagram.com/ksdae.menlhk" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
-    """,
-    unsafe_allow_html=True
-)
+    <hr style="border:0.5px solid #2ecc71; margin:12px 0;">
+    
+    <div class="contact-section">
+        <b>🚒 Pemadam Kebakaran (DAMKAR)</b><br>
+        ☎️ 113<br>
+        🌐 <a href="https://damkar.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
+        📸 <a href="https://www.instagram.com/damkarindonesia" target="_blank" style="color:#9efeff;">Instagram</a>
+    </div>
+    <hr style="border:0.5px solid #2ecc71; margin:12px 0;">
+    
+    <div class="contact-section">
+        <b>👮 Kepolisian Negara Republik Indonesia (POLRI)</b><br>
+        ☎️ 110<br>
+        🌐 <a href="https://polri.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
+        📸 <a href="https://www.instagram.com/divisihumaspolri" target="_blank" style="color:#9efeff;">Instagram</a>
+    </div>
+
+    <p style="margin-top:15px; font-size:14px; color:#eee;">
+        ⚠️ <b>Layanan Darurat 24 Jam:</b> Jika menemukan satwa liar berbahaya, segera hubungi pihak berwenang.
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 
 # ==========================
