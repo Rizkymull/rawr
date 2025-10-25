@@ -46,10 +46,7 @@ st.markdown(
 # HEADER
 # ==========================
 st.title("🐊 Deteksi & Klasifikasi Jenis Buaya")
-st.markdown("""
-Aplikasi ini menggunakan model **YOLOv8** dan **Keras** untuk mendeteksi serta mengenali jenis buaya seperti:
-**Crocodile, Alligator**, dan **Gharial**.
-""")
+
 
 # ==========================
 # LOAD MODEL
