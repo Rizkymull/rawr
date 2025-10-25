@@ -108,7 +108,6 @@ st.markdown("""
     <!-- BKSDA -->
     <div style="margin-top:10px;">
         <b style="color:#7CFC00;">🦎 Balai Konservasi Sumber Daya Alam (BKSDA)</b><br>
-        ☎️ <b>0813-4829-XXXX</b><br>
         🌐 <a href="https://ksdae.menlhk.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
         📸 <a href="https://www.instagram.com/ksdae.menlhk" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
