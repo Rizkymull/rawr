@@ -100,7 +100,7 @@ Segera amankan diri dan hubungi pihak berwenang.
 """, unsafe_allow_html=True)
 
 # ==========================
-# ☎️ Hubungi
+# ==== ☎️ Kontak Resmi ====
 # ==========================
 st.markdown(
     """
@@ -135,6 +135,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 # ==========================
 # LOAD MODEL
