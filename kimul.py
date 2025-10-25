@@ -19,7 +19,7 @@ st.markdown(
     <style>
     /* Atur gambar latar belakang */
     .stApp {
-        background-image: url("https://raw.githubusercontent.com/Rizkymull/rawr/main/Asal/Swamp 1.jpg");
+        background-image: url("https://raw.githubusercontent.com/Rizkymull/rawr/main/Asal/bg 1.jpg");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
