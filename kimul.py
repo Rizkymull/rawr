@@ -99,7 +99,6 @@ st.markdown("""
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
     line-height: 1.6;
 ">
-
     <h3 style="color:#FFD700; text-align:center; margin-bottom:10px;">📞 KONTAK RESMI DARURAT</h3>
     <p style="text-align:center; color:#e0e0e0; font-size:14px;">
         Hubungi instansi berikut jika menemukan buaya atau satwa liar berbahaya. <br>
