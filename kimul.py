@@ -14,29 +14,22 @@ st.set_page_config(
     layout="centered",
 )
 
-# Gaya CSS tambahan untuk tampilan tema
+# ==========================
+# GAYA & TEMA
+# ==========================
 st.markdown("""
 <style>
+/* ===== Background Tema ===== */
 body {
-    background-color: #f1f8f4;
-    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(180deg, #c8e6c9 0%, #a5d6a7 30%, #81c784 60%, #66bb6a 100%);
+    background-attachment: fixed;
+    color: #1b5e20;
+    font-family: 'Segoe UI', sans-serif;
 }
-h1, h2, h3 {
-    color: #155724;
-}
-div.stButton > button {
-    background-color: #2e7d32;
-    color: white;
-    border-radius: 10px;
-    padding: 0.6em 1.2em;
-    font-weight: bold;
-}
-div.stButton > button:hover {
-    background-color: #1b5e20;
-    color: white;
-}
+
+/* ===== Kotak Elemen ===== */
 .alert-box {
-    background-color: #fff3cd;
+    background-color: rgba(255, 243, 205, 0.95);
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #ffeeba;
@@ -44,23 +37,65 @@ div.stButton > button:hover {
     margin-bottom: 15px;
 }
 .contact-box {
-    background-color: #d4edda;
+    background-color: rgba(212, 237, 218, 0.95);
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid #c3e6cb;
     color: #155724;
     margin-top: 25px;
+}
+
+/* ===== Tombol ===== */
+div.stButton > button {
+    background-color: #2e7d32;
+    color: white;
+    border-radius: 10px;
+    padding: 0.6em 1.2em;
+    font-weight: bold;
+    transition: 0.3s;
+}
+div.stButton > button:hover {
+    background-color: #1b5e20;
+}
+
+/* ===== Header dan Judul ===== */
+h1, h2, h3 {
+    color: #1b5e20;
+    text-align: center;
+}
+
+/* ===== Gaya Radio Button dan File Uploader ===== */
+.stRadio label {
+    font-weight: 600;
+    color: #2e7d32;
+}
+.stFileUploader label, .stCameraInput label {
+    font-weight: 600;
+    color: #2e7d32;
+}
+
+/* ===== Box Gambar ===== */
+img {
+    border-radius: 10px;
+}
+
+/* ===== Footer Info ===== */
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    color: #2e7d32;
+    font-size: 14px;
 }
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================
-# JUDUL APLIKASI
+# JUDUL
 # ==========================
 st.title("🐊 Deteksi Buaya Menggunakan YOLOv8")
 st.markdown(
-    '<div class="alert-box">⚠️ Jika Anda melihat buaya di sekitar Anda, **jangan dekati**! '
-    'Segera amankan diri Anda dan laporkan ke pihak berwenang.</div>',
+    '<div class="alert-box">⚠️ Jika Anda melihat buaya di sekitar Anda, '
+    '<b>jangan dekati</b>! Segera amankan diri dan laporkan ke pihak berwenang.</div>',
     unsafe_allow_html=True
 )
 
@@ -87,11 +122,10 @@ def load_models():
 yolo_model, keras_model = load_models()
 
 # ==========================
-# PILIH SUMBER GAMBAR
+# INPUT GAMBAR
 # ==========================
 st.subheader("📸 Pilih Sumber Gambar")
 option = st.radio("Pilih metode input:", ["Unggah Gambar", "Gunakan Kamera"], horizontal=True)
-
 img = None
 
 if option == "Unggah Gambar":
@@ -100,12 +134,12 @@ if option == "Unggah Gambar":
         img = Image.open(uploaded_file).convert("RGB")
 
 elif option == "Gunakan Kamera":
-    camera_file = st.camera_input("Ambil gambar menggunakan kamera")
+    camera_file = st.camera_input("📷 Ambil gambar menggunakan kamera")
     if camera_file:
         img = Image.open(camera_file).convert("RGB")
 
 # ==========================
-# PROSES DETEKSI
+# DETEKSI YOLO
 # ==========================
 if img is not None:
     st.image(img, caption="🖼 Gambar Input", use_container_width=True)
@@ -127,11 +161,11 @@ if img is not None:
             conf = float(best_box.conf[0])
 
             cropped_img = img.crop((x1, y1, x2, y2))
-            st.image(cropped_img, caption="🧩 Area Deteksi (Crop dari YOLO)", use_container_width=True)
+            st.image(cropped_img, caption="🌿 Area Deteksi (Crop dari YOLO)", use_container_width=True)
 
             st.success(f"✅ Objek terdeteksi: **{yolo_label.upper()}** (Akurasi: {conf*100:.2f}%)")
 
-            if "buaya" in yolo_label.lower():
+            if "buaya" in yolo_label.lower() or "crocodile" in yolo_label.lower():
                 st.warning("⚠️ Deteksi menunjukkan adanya *buaya*! Jangan dekati dan segera hubungi BKSDA!")
 
         else:
@@ -146,18 +180,23 @@ else:
 # ==========================
 # KONTAK BKSDA
 # ==========================
+st.markdown("""
+<div class="contact-box">
+    📞 <b>Hubungi BKSDA Terdekat</b><br>
+    Jika Anda menemukan buaya atau satwa liar berbahaya, segera hubungi:
+    <ul>
+        <li><b>BKSDA Kalimantan Selatan</b>: 0813-4829-XXXX</li>
+        <li><b>BKSDA Sumatera Selatan</b>: 0821-3456-XXXX</li>
+        <li><b>BKSDA Jawa Timur</b>: 0812-7654-XXXX</li>
+    </ul>
+    🕐 Layanan 24 Jam
+</div>
+""", unsafe_allow_html=True)
+
+# ==========================
+# FOOTER
+# ==========================
 st.markdown(
-    """
-    <div class="contact-box">
-        📞 <b>Hubungi BKSDA Terdekat</b><br>
-        Jika Anda menemukan buaya atau satwa liar berbahaya, segera hubungi:
-        <ul>
-            <li><b>BKSDA Kalimantan Selatan</b>: 0813-4829-XXXX</li>
-            <li><b>BKSDA Sumatera Selatan</b>: 0821-3456-XXXX</li>
-            <li><b>BKSDA Jawa Timur</b>: 0812-7654-XXXX</li>
-        </ul>
-        🕐 Layanan 24 Jam
-    </div>
-    """,
+    '<div class="footer">© 2025 Sistem Deteksi Buaya | Dikembangkan oleh Muhammad Rizki Mulia</div>',
     unsafe_allow_html=True
 )
