@@ -201,9 +201,10 @@ if uploaded_file:
                         color: #eaffea; font-size: 15px; margin-top: 20px;'>
             <b>Hubungi BKSDA Terdekat</b><br>
             Jika Anda menemukan buaya atau satwa liar berbahaya, segera hubungi:<br><br>
-            • <b>BKSDA Kalimantan Selatan:</b> 0813-4829-XXXX<br>
-            • <b>BKSDA Sumatera Selatan:</b> 0821-3456-XXXX<br>
-            • <b>BKSDA Jawa Timur:</b> 0812-7654-XXXX<br><br>
+            • <b>BKSDA Aceh:</b> 0853-6283-6024<br>
+            • <b>BKSDA Kalimantan Selatan:</b> 0812-4849-4950<br>
+            • <b>BKSDA Sumatera Selatan:</b> 0812-7141-2141<br>
+            • <b>BKSDA Jawa Timur:</b> 0822-3211-5200<br><br>
             🕐 Layanan 24 Jam
             </div>
             """, unsafe_allow_html=True)
