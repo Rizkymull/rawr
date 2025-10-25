@@ -1,132 +1,106 @@
 import streamlit as st
-from PIL import Image
-import numpy as np
 from ultralytics import YOLO
 import tensorflow as tf
+from tensorflow.keras.preprocessing import image
+import numpy as np
+from PIL import Image
+import cv2
+import tempfile
 import os
 
 # ==========================
-# KONFIGURASI HALAMAN
-# ==========================
-st.set_page_config(page_title="Deteksi & Klasifikasi Buaya", layout="centered")
-
-# ==========================
-# CSS ANIMASI BACKGROUND RAWA
-# ==========================
-page_bg = """
-<style>
-[data-testid="stAppViewContainer"] {
-    background-image: url("https://i.ibb.co/q0V7Dvq/swamp-bg.gif");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    animation: fadein 2s;
-}
-@keyframes fadein {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-[data-testid="stHeader"] {background: rgba(0,0,0,0);}
-</style>
-"""
-st.markdown(page_bg, unsafe_allow_html=True)
-
-# ==========================
-# JUDUL APLIKASI
-# ==========================
-st.markdown("<h1 style='text-align:center; color:#004d00;'>🐊 Deteksi & Klasifikasi Jenis Buaya</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center; color:white;'>Aplikasi ini menggunakan model <b>YOLOv8</b> dan <b>Keras</b> untuk mendeteksi serta mengenali jenis buaya seperti <b>Crocodile</b>, <b>Alligator</b>, dan <b>Gharial</b>.</p>", unsafe_allow_html=True)
-st.write("---")
-
-# ==========================
-# LOAD MODEL
+# Fungsi Load Model
 # ==========================
 @st.cache_resource
 def load_models():
-    yolo_path = "model/best.pt"  # model YOLO utama
-    keras_path = "model/muhammad rizki mulia_Laporan 2.h5"  # model Keras tambahan
+    try:
+        yolo_model = YOLO("model/best.pt")  # Model deteksi objek
+    except Exception as e:
+        st.error(f"Gagal memuat YOLO model: {e}")
+        yolo_model = None
 
-    if not os.path.exists(yolo_path):
-        st.error(f"❌ File model YOLO tidak ditemukan di: {yolo_path}")
-        st.stop()
-
-    yolo_model = YOLO(yolo_path)
-
-    if os.path.exists(keras_path):
-        keras_model = tf.keras.models.load_model(keras_path)
-    else:
+    try:
+        keras_model = tf.keras.models.load_model("model/classifier_model.h5")  # Model klasifikasi
+    except Exception as e:
+        st.error(f"Gagal memuat Keras model: {e}")
         keras_model = None
-        st.warning("⚠️ Model Keras tidak ditemukan. Hanya YOLO yang digunakan.")
 
     return yolo_model, keras_model
 
+
+# ==========================
+# Fungsi Prediksi
+# ==========================
+def predict_image(img, yolo_model, keras_model):
+    if yolo_model is None or keras_model is None:
+        st.warning("Model belum dimuat dengan benar.")
+        return None, None
+
+    # Simpan sementara gambar ke file untuk YOLO
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tmpfile:
+        img.save(tmpfile.name)
+        results = yolo_model(tmpfile.name)
+        boxes = results[0].boxes.xyxy.cpu().numpy()
+        confs = results[0].boxes.conf.cpu().numpy()
+        labels = results[0].boxes.cls.cpu().numpy()
+    
+    # Ambil deteksi pertama saja (jika ada)
+    if len(boxes) > 0:
+        x1, y1, x2, y2 = boxes[0]
+        cropped_img = img.crop((x1, y1, x2, y2))
+        cropped_img = cropped_img.resize((224, 224))  # Sesuai input CNN
+
+        # Ubah ke numpy array
+        img_array = image.img_to_array(cropped_img)
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array /= 255.0
+
+        # Prediksi Keras Model
+        pred = keras_model.predict(img_array)
+        class_idx = np.argmax(pred)
+        confidence = float(np.max(pred))
+        return class_idx, confidence
+    else:
+        st.warning("Tidak ada objek terdeteksi oleh YOLO.")
+        return None, None
+
+
+# ==========================
+# Aplikasi Streamlit
+# ==========================
+st.title("🔍 Deteksi & Klasifikasi Gambar")
+
+# Load model sekali saja
 yolo_model, keras_model = load_models()
 
-# ==========================
-# PILIH SUMBER GAMBAR
-# ==========================
-st.subheader("📸 Pilih Sumber Gambar")
-input_option = st.radio("Pilih metode input:", ["Upload Foto", "Gunakan Kamera"], horizontal=True)
+# Pilihan input: Kamera atau Upload
+input_choice = st.radio(
+    "Pilih sumber gambar:",
+    ["📸 Gunakan Kamera", "🖼️ Upload Foto"],
+    index=1
+)
 
-if input_option == "Upload Foto":
-    uploaded_file = st.file_uploader("📤 Unggah Gambar Buaya", type=["jpg", "jpeg", "png"])
-elif input_option == "Gunakan Kamera":
-    uploaded_file = st.camera_input("📷 Ambil Foto dari Kamera")
+if input_choice == "📸 Gunakan Kamera":
+    uploaded_img = st.camera_input("Ambil gambar dengan kamera")
 else:
-    uploaded_file = None
+    uploaded_img = st.file_uploader("Upload gambar (JPG/PNG)", type=["jpg", "jpeg", "png"])
 
-# ==========================
-# PROSES DETEKSI DAN KLASIFIKASI
-# ==========================
-if uploaded_file is not None:
-    img = Image.open(uploaded_file).convert("RGB")
-    st.image(img, caption="Gambar Input", use_container_width=True)
-    st.subheader("🔍 Proses Deteksi")
+if uploaded_img is not None:
+    # Tampilkan gambar
+    img = Image.open(uploaded_img)
+    st.image(img, caption="Gambar Diuji", use_container_width=True)
 
-    try:
-        results = yolo_model(img)
-        annotated_img = results[0].plot()
-        st.image(annotated_img, caption="Hasil Deteksi YOLO", use_container_width=True)
+    # Tombol prediksi
+    if st.button("🔎 Prediksi"):
+        with st.spinner("Sedang memproses..."):
+            class_idx, confidence = predict_image(img, yolo_model, keras_model)
 
-        boxes = results[0].boxes
-        names = results[0].names
+            if class_idx is not None:
+                st.success(f"Hasil Prediksi: Kelas {class_idx} (Confidence: {confidence:.2f})")
+            else:
+                st.error("Gagal melakukan prediksi.")
 
-        if len(boxes) > 0:
-            # Ambil hasil deteksi confidence tertinggi
-            best_box = boxes[np.argmax([float(b.conf[0]) for b in boxes])]
-            x1, y1, x2, y2 = map(int, best_box.xyxy[0])
-            cls_id = int(best_box.cls[0])
-            yolo_label = names[cls_id]
-            conf = float(best_box.conf[0])
 
-            # Crop area hasil deteksi
-            cropped_img = img.crop((x1, y1, x2, y2))
-            st.image(cropped_img, caption="🧩 Area Hasil Deteksi", use_container_width=True)
-
-            # ==========================
-            # HASIL AKHIR
-            # ==========================
-            st.success(f"✅ Jenis Buaya Terdeteksi: **{yolo_label.capitalize()}** (Akurasi: {conf*100:.2f}%)")
-
-            st.markdown(
-                """
-                <div style='background:rgba(0,0,0,0.6); padding:15px; border-radius:10px; margin-top:20px; text-align:center; color:white;'>
-                    ⚠️ <b>Jika Anda Melihat Buaya, Jangan Dekati!</b><br>
-                    Segera hubungi <b>BKSDA</b> atau pihak berwenang setempat untuk penanganan lebih lanjut.
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-        else:
-            st.warning("🚫 Tidak ada objek buaya terdeteksi. Pastikan gambar jelas.")
-
-    except Exception as e:
-        st.error(f"❌ Terjadi kesalahan saat deteksi: {e}")
-
-else:
-    st.info("⬆ Pilih mode input terlebih dahulu, lalu unggah atau ambil foto buaya.")
-
-# ==========================
-# FOOTER
-# ==========================
-st.markdown("<br><hr><p style='text-align:center; color:#e0ffe0;'>Dibuat oleh <b>Muhammad Rizki Mulia</b> | Proyek Klasifikasi Buaya 🐊 2025<br>Menggunakan Streamlit + YOLOv8 + TensorFlow</p>", unsafe_allow_html=True)
+# Footer
+st.markdown("---")
+st.caption("© 2025 Sistem Deteksi & Klasifikasi Gambar - by Riski Mulya")
