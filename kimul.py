@@ -14,107 +14,85 @@ st.title("🧠 Sistem Deteksi Buaya YOLOv8")
 # ==================================
 # 🎨 1️⃣ TAMBAHKAN KODE CSS DI SINI
 # ==================================
-st.markdown("""
-<style>
-/* ===== Tema Utama ===== */
-body {
-    background-color: #2e473b;
-    background-image: url("https://images.unsplash.com/photo-1581093588401-4b62a2e4d0e9?auto=format&fit=crop&w=1600&q=80");
-    background-size: cover;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-position: center;
-}
+st.markdown(
+    """
+    <style>
+    /* Atur gambar latar belakang */
+    .stApp {
+        background-image: url("https://raw.githubusercontent.com/Rizkymull/rawr/main/Asal/swamp.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        opacity: 0.95;
+    }
 
-/* ===== Overlay lembut agar teks kontras ===== */
-.reportview-container, .main, .block-container {
-    background: rgba(46, 71, 59, 0.75) !important;
-    border-radius: 18px;
-    padding: 1.8em;
-    color: #f2f9f3;
-}
+    /* Efek overlay kabut lembut */
+    .stApp::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 30, 20, 0.3); /* hijau tua semi transparan */
+        z-index: -1;
+    }
 
-/* ===== Judul dengan ornamen rawa ===== */
-h1 {
-    color: #d0e3d1;
-    text-align: center;
-    font-size: 2.5em;
-    padding: 15px;
-    background: rgba(0, 60, 30, 0.5);
-    border-radius: 15px;
-    position: relative;
-}
-h1::before {
-    content: "🐊 ";
-}
-h1::after {
-    content: " 🌿";
-}
+    /* Warna teks disesuaikan agar kontras */
+    h1, h2, h3, p, li, label {
+        color: #f5f5f5 !important;
+    }
 
-/* ===== Subjudul ===== */
-h2, h3 {
-    color: #d0e3d1;
-    text-align: center;
-}
+    /* Gaya peringatan */
+    .alert {
+        background-color: rgba(255, 255, 0, 0.15);
+        border: 1px solid #ffe100;
+        padding: 10px 15px;
+        border-radius: 10px;
+        color: #fff700;
+        text-align: center;
+        font-weight: bold;
+        font-size: 17px;
+    }
 
-/* ===== Alert box ===== */
-.alert-box {
-    background-color: rgba(255, 243, 205, 0.9);
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #ffeeba;
-    color: #3e2723;
-    margin-bottom: 15px;
-    box-shadow: 0 0 10px rgba(255,255,255,0.1);
-}
+    /* Kotak kontak BKSDA */
+    .bksda-box {
+        background-color: rgba(0, 70, 30, 0.4);
+        border: 1px solid #2ecc71;
+        padding: 15px;
+        border-radius: 12px;
+        color: #eaffea;
+        font-size: 15px;
+        margin-top: 20px;
+    }
 
-/* ===== Box Kontak ===== */
-.contact-box {
-    background-color: rgba(208, 227, 209, 0.9);
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid #a5d6a7;
-    color: #1b5e20;
-    margin-top: 25px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-.contact-box::before {
-    content: "📞 ";
-    font-size: 1.2em;
-    font-weight: bold;
-}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-/* ===== Tombol ===== */
-div.stButton > button {
-    background-color: #3e8e41;
-    color: white;
-    border-radius: 10px;
-    padding: 0.6em 1.2em;
-    font-weight: bold;
-    transition: 0.3s;
-    border: none;
-}
-div.stButton > button:hover {
-    background-color: #2e7d32;
-    transform: scale(1.05);
-}
+# ==== ⚠️ Peringatan Keselamatan ====
+st.markdown(
+    """
+    <div class="alert">
+        ⚠️ Jika Anda melihat buaya di sekitar Anda, <b>jangan dekati!</b> 
+        Segera amankan diri dan hubungi pihak berwenang.
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-/* ===== Radio button ===== */
-.css-1a32fsj div[role='radiogroup'] label {
-    color: #f2f9f3 !important;
-}
-
-/* ===== Footer ===== */
-.footer {
-    margin-top: 40px;
-    text-align: center;
-    color: #b2dfdb;
-    font-size: 14px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding-top: 10px;
-}
-</style>
-""", unsafe_allow_html=True)
+# ==== ☎️ Kontak BKSDA ====
+st.markdown(
+    """
+    <div class="bksda-box">
+        <b>📞 Hubungi BKSDA Terdekat:</b><br>
+        • BKSDA Kalimantan Selatan: <b>0813-4829-XXXX</b><br>
+        • BKSDA Sumatera Selatan: <b>0821-3456-XXXX</b><br>
+        • BKSDA Jawa Timur: <b>0812-7654-XXXX</b><br><br>
+        <i>Layanan 24 Jam</i>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # ============================================
 # 🏞️ 2️⃣ TAMBAHKAN GAMBAR ILUSTRASI DI SINI
