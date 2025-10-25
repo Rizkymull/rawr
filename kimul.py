@@ -15,7 +15,7 @@ st.set_page_config(page_title="Deteksi Buaya YOLOv8", layout="centered")
 st.title("🧠 Sistem Deteksi Buaya YOLOv8")
 
 # ======================================
-# 🎨 CSS Desain
+# 🎨 CSS Desain (DIPERHALUS)
 # ======================================
 st.markdown("""
 <style>
@@ -28,12 +28,12 @@ st.markdown("""
     background-position: center;
 }
 
-/* ==== Overlay ==== */
+/* ==== Overlay Lembut ==== */
 [data-testid="stAppViewContainer"]::before {
     content: "";
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.45);
     z-index: 0;
 }
 [data-testid="stAppViewContainer"] > div {
@@ -41,35 +41,44 @@ st.markdown("""
     z-index: 1;
 }
 
-/* ==== Warna & Font ==== */
-h1, h2, h3, h4, h5, h6, p, span, label, div, li {
-    color: #FFFFFF !important;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
+/* ==== Font & Warna ==== */
+h1, h2, h3, h4, h5, h6 {
+    color: #E6F4EA !important;
     font-family: "Poppins", sans-serif;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
 }
+
+p, span, label, div, li {
+    color: #E0E5E9 !important;
+    font-family: "Poppins", sans-serif;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+}
+
 [data-testid="stMarkdownContainer"] strong {
-    color: #FFD700 !important;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    color: #C7F464 !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
 }
 
 /* ==== Tombol ==== */
 .stButton>button {
-    background-color: #FFD700 !important;
-    color: black !important;
+    background-color: #C7F464 !important;
+    color: #1B1B1B !important;
     border-radius: 10px;
     font-weight: bold;
-    box-shadow: 0px 0px 10px rgba(255, 215, 0, 0.5);
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0 0 10px rgba(199, 244, 100, 0.5);
 }
 .stButton>button:hover {
-    background-color: #FFA500 !important;
+    background-color: #A4D65E !important;
     color: white !important;
 }
 
 /* ==== Kotak Upload ==== */
 section[data-testid="stFileUploaderDropzone"] {
-    background-color: rgba(255, 255, 255, 0.15);
-    border: 2px dashed #FFD700;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px dashed #C7F464;
     border-radius: 12px;
+    color: #E0E5E9;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -78,8 +87,10 @@ section[data-testid="stFileUploaderDropzone"] {
 # ⚠️ Peringatan Umum
 # ======================================
 st.markdown("""
-<div style='background-color: rgba(255, 255, 0, 0.15); border: 1px solid #ffe100;
-            padding: 10px 15px; border-radius: 10px; color: #fff700; text-align: center;
+<div style='background-color: rgba(255, 222, 100, 0.15);
+            border: 1px solid #C7F464;
+            padding: 10px 15px; border-radius: 10px;
+            color: #F8F8E8; text-align: center;
             font-weight: bold; font-size: 17px;'>
 ⚠ Jika Anda melihat buaya di sekitar Anda, <b>jangan dekati!</b> 
 Segera amankan diri dan hubungi pihak berwenang.
@@ -87,46 +98,46 @@ Segera amankan diri dan hubungi pihak berwenang.
 """, unsafe_allow_html=True)
 
 # ======================================
-# ☎️ Kontak Resmi (Diperbaiki)
+# ☎️ Kontak Resmi (Perbaikan Warna & Font)
 # ======================================
 st.markdown("""
 <div style="
     background: rgba(0, 0, 0, 0.55);
     padding: 22px;
     border-radius: 15px;
-    color: #fff;
+    color: #E6F4EA;
     font-size: 15px;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 12px rgba(200, 255, 150, 0.2);
     line-height: 1.6;
 ">
-    <h3 style="color:#FFD700; text-align:center; margin-bottom:10px;">📞 KONTAK RESMI DARURAT</h3>
-    <p style="text-align:center; color:#e0e0e0; font-size:14px;">
+    <h3 style="color:#C7F464; text-align:center; margin-bottom:10px;">📞 KONTAK RESMI DARURAT</h3>
+    <p style="text-align:center; color:#DCE8DD; font-size:14px;">
         Hubungi instansi berikut jika menemukan buaya atau satwa liar berbahaya. <br>
         <b>Layanan tersedia 24 jam.</b>
     </p>
-    <hr style="border:0.5px solid #FFD700; margin:12px 0;">
+    <hr style="border:0.5px solid #A4D65E; margin:12px 0;">
     <!-- BKSDA -->
     <div style="margin-top:10px;">
-        <b style="color:#7CFC00;">🦎 Balai Konservasi Sumber Daya Alam (BKSDA)</b><br>
-        ☎️ <b>(021)5704501</b><br>
+        <b style="color:#C7F464;">🦎 Balai Konservasi Sumber Daya Alam (BKSDA)</b><br>
+        ☎️ <b style="color:#F6FFCC;">(021)5704501</b><br>
         📸 <a href="https://www.instagram.com/ksdae.menlhk" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
-    <hr style="border:0.5px solid #2ecc71; margin:15px 0;">
+    <hr style="border:0.5px solid #A4D65E; margin:15px 0;">
     <!-- DAMKAR -->
     <div>
-        <b style="color:#FF8C00;">🚒 Pemadam Kebakaran (DAMKAR)</b><br>
-        ☎️ <b>113</b><br>
+        <b style="color:#FFD180;">🚒 Pemadam Kebakaran (DAMKAR)</b><br>
+        ☎️ <b style="color:#FFF1C1;">113</b><br>
         📸 <a href="https://www.instagram.com/damkarindonesia" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
-    <hr style="border:0.5px solid #2ecc71; margin:15px 0;">
+    <hr style="border:0.5px solid #A4D65E; margin:15px 0;">
     <!-- POLRI -->
     <div>
-        <b style="color:#00BFFF;">👮 Kepolisian Negara Republik Indonesia (POLRI)</b><br>
-        ☎️ <b>110</b><br>
+        <b style="color:#89D1FF;">👮 Kepolisian Negara Republik Indonesia (POLRI)</b><br>
+        ☎️ <b style="color:#EAF6FF;">110</b><br>
         📸 <a href="https://www.instagram.com/divisihumaspolri" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
-    <hr style="border:0.5px solid #FFD700; margin:15px 0;">
-    <p style="text-align:center; font-size:13.5px; color:#eee;">
+    <hr style="border:0.5px solid #C7F464; margin:15px 0;">
+    <p style="text-align:center; font-size:13.5px; color:#F6F8E7;">
         ⚠️ <b>Darurat Satwa Liar:</b> Jangan coba menangkap atau mengusir sendiri.<br>
         Laporkan ke BKSDA atau aparat setempat untuk penanganan aman.
     </p>
@@ -195,8 +206,8 @@ if uploaded_file:
             # Informasi kontak tambahan
             st.markdown("""
             <div style='background-color: rgba(0, 70, 30, 0.45);
-                        border: 1px solid #2ecc71; padding: 15px; border-radius: 12px;
-                        color: #eaffea; font-size: 15px; margin-top: 20px;'>
+                        border: 1px solid #A4D65E; padding: 15px; border-radius: 12px;
+                        color: #EAF8E1; font-size: 15px; margin-top: 20px;'>
             <b>Hubungi BKSDA Terdekat</b><br>
             Jika Anda menemukan buaya atau satwa liar berbahaya, segera hubungi:<br><br>
             • <b>BKSDA Aceh:</b> 0853-6283-6024<br>
