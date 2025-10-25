@@ -8,7 +8,7 @@ from ultralytics import YOLO
 # ==============================
 st.set_page_config(
     page_title="Deteksi & Klasifikasi Jenis Buaya",
-    page_icon="🦎",
+    page_icon="🐊",
     layout="centered"
 )
 
@@ -16,7 +16,7 @@ st.set_page_config(
 # Judul dan Deskripsi
 # ==============================
 st.markdown("""
-<h1 style='text-align: center; color: #2E8B57;'>🦎 Deteksi & Klasifikasi Jenis Buaya</h1>
+<h1 style='text-align: center; color: #2E8B57;'>🐊 Deteksi & Klasifikasi Jenis Buaya</h1>
 <p style='text-align: center;'>
 Aplikasi ini menggunakan model <b>YOLOv8</b> dan <b>Keras</b> untuk mendeteksi serta mengenali jenis buaya seperti:
 <b>Crocodile</b>, <b>Alligator</b>, dan <b>Gharial</b>.
