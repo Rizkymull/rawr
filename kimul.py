@@ -94,16 +94,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ============================================
-# 🏞️ 2️⃣ TAMBAHKAN GAMBAR ILUSTRASI DI SINI
-# ============================================
-st.image(
-    "https://png.pngtree.com/png-clipart/20231011/original/pngtree-swamp-landscape-vector-illustration-png-image_13136005.png",
-    use_container_width=True,
-    caption="Habitat alami buaya (ilustrasi)",
-    output_format="PNG"
-)
-
 # ==========================
 # LOAD MODEL
 # ==========================
