@@ -2,187 +2,108 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from ultralytics import YOLO
-import tensorflow as tf
-import os
 
-# ==========================
-# KONFIGURASI HALAMAN
-# ==========================
+# ==============================
+# Konfigurasi Halaman
+# ==============================
 st.set_page_config(
-    page_title="🐊 Deteksi & Klasifikasi Buaya",
-    page_icon="🐊",
+    page_title="Deteksi & Klasifikasi Jenis Buaya",
+    page_icon="🦎",
     layout="centered"
 )
 
-# ==========================
-# GAYA TAMPAILAN DENGAN ANIMASI BACKGROUND
-# ==========================
-st.markdown(
-    """
-    <style>
-    /* ===== ANIMATED SWAMP BACKGROUND ===== */
-    body {
-        background: linear-gradient(-45deg, #3b6e47, #204d2e, #264f3b, #3f7753);
-        background-size: 400% 400%;
-        animation: gradientMove 12s ease infinite;
-        color: #111;
-    }
-
-    @keyframes gradientMove {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-
-    /* ===== KONTEN ===== */
-    h1 {
-        color: #eaffea;
-        text-align: center;
-        font-weight: 800;
-        text-shadow: 2px 2px 5px #003300;
-    }
-    .stApp {
-        background: transparent;
-    }
-    .block-container {
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 2rem 3rem;
-        border-radius: 20px;
-        box-shadow: 0 0 25px rgba(0,0,0,0.3);
-    }
-    .warning-box {
-        background-color: rgba(255, 230, 230, 0.95);
-        padding: 15px;
-        border-radius: 12px;
-        border-left: 6px solid red;
-        font-size: 16px;
-        color: #900;
-        margin-top: 20px;
-    }
-    footer {
-        text-align: center;
-        color: #f0fff0;
-        font-size: 13px;
-        margin-top: 40px;
-        text-shadow: 1px 1px 2px #003300;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# ==========================
-# HEADER
-# ==========================
-st.title("🐊 Deteksi & Klasifikasi Jenis Buaya")
+# ==============================
+# Judul dan Deskripsi
+# ==============================
 st.markdown("""
-Aplikasi ini menggunakan model **YOLOv8** dan **Keras** untuk mendeteksi serta mengenali jenis buaya seperti:
-**Crocodile, Alligator**, dan **Gharial**.
-""")
+<h1 style='text-align: center; color: #2E8B57;'>🦎 Deteksi & Klasifikasi Jenis Buaya</h1>
+<p style='text-align: center;'>
+Aplikasi ini menggunakan model <b>YOLOv8</b> dan <b>Keras</b> untuk mendeteksi serta mengenali jenis buaya seperti:
+<b>Crocodile</b>, <b>Alligator</b>, dan <b>Gharial</b>.
+</p>
+""", unsafe_allow_html=True)
 
-# ==========================
-# LOAD MODEL
-# ==========================
-@st.cache_resource
-def load_models():
-    yolo_path = "model/best.pt"
-    keras_path = "model/muhammad rizki mulia_Laporan 2.h5"
+# ==============================
+# Peringatan Utama
+# ==============================
+st.warning("⚠️ Jika Anda melihat buaya di sekitar Anda, **jangan dekati** dan segera hubungi pihak berwenang atau petugas satwa liar terdekat.")
 
-    if not os.path.exists(yolo_path):
-        st.error("❌ Model YOLO (.pt) tidak ditemukan.")
-        st.stop()
-
-    if not os.path.exists(keras_path):
-        st.warning("⚠️ Model Keras (.h5) tidak ditemukan. Hanya YOLO yang digunakan.")
-        keras_model = None
-    else:
-        keras_model = tf.keras.models.load_model(keras_path)
-
-    yolo_model = YOLO(yolo_path)
-    return yolo_model, keras_model
-
-yolo_model, keras_model = load_models()
-
-# ==========================
-# PILIH SUMBER GAMBAR
-# ==========================
+# ==============================
+# Pilihan Sumber Gambar
+# ==============================
 st.subheader("📸 Pilih Sumber Gambar")
+st.write("Silakan pilih metode input di bawah ini untuk mengunggah atau mengambil foto buaya:")
 
-input_mode = st.radio(
+mode_input = st.radio(
     "Pilih metode input:",
-    ["📤 Upload Foto", "🎥 Gunakan Kamera"],
+    ["📁 Upload Foto", "📷 Gunakan Kamera"],
     horizontal=True
 )
 
-if input_mode == "📤 Upload Foto":
-    image_file = st.file_uploader("Unggah gambar dari perangkat Anda", type=["jpg", "jpeg", "png"])
-elif input_mode == "🎥 Gunakan Kamera":
-    image_file = st.camera_input("Ambil foto menggunakan kamera")
+uploaded_image = None
 
-# ==========================
-# PROSES DETEKSI
-# ==========================
-if image_file:
-    img = Image.open(image_file).convert("RGB")
-    st.image(img, caption="🖼️ Gambar yang diproses", use_container_width=True)
+# ==============================
+# Upload Foto dari Perangkat
+# ==============================
+if mode_input == "📁 Upload Foto":
+    uploaded_image = st.file_uploader(
+        "Unggah gambar dari perangkat Anda (JPG, JPEG, PNG)",
+        type=["jpg", "jpeg", "png"]
+    )
 
-    st.subheader("🔍 Hasil Deteksi (YOLO)")
-    try:
-        results = yolo_model(img)
-        annotated_img = results[0].plot()
-        st.image(annotated_img, caption="📊 Deteksi Otomatis", use_container_width=True)
+# ==============================
+# Gunakan Kamera
+# ==============================
+elif mode_input == "📷 Gunakan Kamera":
+    uploaded_image = st.camera_input("Ambil foto menggunakan kamera Anda")
 
-        boxes = results[0].boxes
-        names = results[0].names
+# ==============================
+# Proses Gambar Jika Ada Input
+# ==============================
+if uploaded_image is not None:
+    st.subheader("🖼️ Gambar yang Dipilih / Diambil")
 
-        if len(boxes) > 0:
-            best_box = boxes[np.argmax([float(b.conf[0]) for b in boxes])]
-            x1, y1, x2, y2 = map(int, best_box.xyxy[0])
-            cls_id = int(best_box.cls[0])
-            yolo_label = names[cls_id]
-            conf = float(best_box.conf[0])
+    # Baca gambar
+    img = Image.open(uploaded_image)
+    st.image(img, caption="Gambar input", use_column_width=True)
 
-            cropped_img = img.crop((x1, y1, x2, y2))
-            st.image(cropped_img, caption="🧩 Area Deteksi", use_container_width=True)
+    # ==============================
+    # Proses Deteksi Menggunakan YOLOv8
+    # ==============================
+    st.subheader("🔍 Proses Deteksi")
+    with st.spinner("Sedang memproses gambar dan mendeteksi buaya..."):
+        # Ganti path model sesuai file kamu
+        model = YOLO("model/buaya_yolov8.pt")  
+        results = model.predict(np.array(img))
 
-            st.success(f"✅ Jenis Buaya Terdeteksi: **{yolo_label.capitalize()}** (Akurasi {conf*100:.2f}%)")
+    # Tampilkan hasil deteksi
+    st.success("✅ Deteksi berhasil dilakukan.")
+    st.image(results[0].plot(), caption="Hasil Deteksi Buaya", use_column_width=True)
 
-            # ==========================
-            # PESAN EDUKATIF
-            # ==========================
-            st.markdown(
-                f"""
-                <div class="warning-box">
-                ⚠️ <b>Peringatan!</b><br>
-                Anda baru saja mendeteksi <b>{yolo_label.capitalize()}</b>.<br>
-                Jika Anda melihat buaya di alam liar, <b>jangan dekati</b> dan segera hubungi petugas <b>BKSDA</b> setempat.
-                <br><br>
-                📞 Nomor Darurat: <b>0813-9999-1234</b><br>
-                🌍 BKSDA Wilayah Anda Siap Membantu.
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    # ==============================
+    # Peringatan Tambahan
+    # ==============================
+    st.warning("""
+    ⚠️ **Peringatan Keamanan:**
+    Jika Anda menemukan buaya di lingkungan sekitar, **jangan dekati**,
+    **jangan berusaha memberi makan atau menangkap**, dan segera **laporkan kepada pihak berwenang**.
+    """)
 
-        else:
-            st.warning("Tidak ada objek buaya yang terdeteksi pada gambar.")
-
-    except Exception as e:
-        st.error(f"❌ Terjadi kesalahan dalam proses deteksi: {e}")
-
+# ==============================
+# Pesan Informasi Jika Belum Input
+# ==============================
 else:
-    st.info("⬆ Silakan pilih mode input, lalu unggah atau ambil foto buaya.")
+    st.info("↑ Silakan pilih mode input, lalu unggah atau ambil foto buaya untuk dianalisis.")
 
-# ==========================
-# FOOTER
-# ==========================
-st.markdown(
-    """
-    <footer>
-    Dibuat oleh <b>Muhammad Rizki Mulia</b> | Proyek Klasifikasi Buaya 🐊 2025<br>
-    Menggunakan Streamlit + YOLOv8 + TensorFlow
-    </footer>
-    """,
-    unsafe_allow_html=True
-)
-
+# ==============================
+# Footer
+# ==============================
+st.markdown("""
+<hr>
+<center>
+<small>
+Dibuat oleh <b>Muhammad Rizki Mulya</b> | Proyek Klasifikasi Buaya 🐊 2025<br>
+Menggunakan <b>Streamlit</b> + <b>YOLOv8</b> + <b>TensorFlow</b>
+</small>
+</center>
+""", unsafe_allow_html=True)
