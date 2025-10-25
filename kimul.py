@@ -15,33 +15,54 @@ st.set_page_config(
 )
 
 # ==========================
-# GAYA & TEMA
+# GAYA & BACKGROUND ANIMASI
 # ==========================
 st.markdown("""
 <style>
-/* ===== Background Tema ===== */
+/* ===== Background Gambar Bergerak ===== */
 body {
-    background: linear-gradient(180deg, #c8e6c9 0%, #a5d6a7 30%, #81c784 60%, #66bb6a 100%);
+    background-image: url("https://images.unsplash.com/photo-1581093588401-4b62a2e4d0e9?auto=format&fit=crop&w=1800&q=80");
+    background-size: cover;
     background-attachment: fixed;
-    color: #1b5e20;
-    font-family: 'Segoe UI', sans-serif;
+    animation: bgmove 60s linear infinite;
 }
 
-/* ===== Kotak Elemen ===== */
+/* ===== Efek Bergerak ===== */
+@keyframes bgmove {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 0%; }
+}
+
+/* ===== Lapisan Hijau Transparan ===== */
+.reportview-container, .main, .block-container {
+    background: rgba(0, 60, 30, 0.5) !important;
+    border-radius: 12px;
+    padding: 1.5em;
+    color: #e8f5e9;
+}
+
+/* ===== Judul ===== */
+h1, h2, h3 {
+    color: #c8e6c9;
+    text-align: center;
+}
+
+/* ===== Alert dan Kontak ===== */
 .alert-box {
-    background-color: rgba(255, 243, 205, 0.95);
+    background-color: rgba(255, 243, 205, 0.85);
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #ffeeba;
-    color: #856404;
+    color: #3e2723;
     margin-bottom: 15px;
 }
 .contact-box {
-    background-color: rgba(212, 237, 218, 0.95);
+    background-color: rgba(212, 237, 218, 0.85);
     padding: 20px;
     border-radius: 10px;
     border: 1px solid #c3e6cb;
-    color: #155724;
+    color: #1b5e20;
     margin-top: 25px;
 }
 
@@ -58,32 +79,11 @@ div.stButton > button:hover {
     background-color: #1b5e20;
 }
 
-/* ===== Header dan Judul ===== */
-h1, h2, h3 {
-    color: #1b5e20;
-    text-align: center;
-}
-
-/* ===== Gaya Radio Button dan File Uploader ===== */
-.stRadio label {
-    font-weight: 600;
-    color: #2e7d32;
-}
-.stFileUploader label, .stCameraInput label {
-    font-weight: 600;
-    color: #2e7d32;
-}
-
-/* ===== Box Gambar ===== */
-img {
-    border-radius: 10px;
-}
-
-/* ===== Footer Info ===== */
+/* ===== Footer ===== */
 .footer {
     margin-top: 40px;
     text-align: center;
-    color: #2e7d32;
+    color: #c8e6c9;
     font-size: 14px;
 }
 </style>
@@ -122,7 +122,7 @@ def load_models():
 yolo_model, keras_model = load_models()
 
 # ==========================
-# INPUT GAMBAR
+# INPUT GAMBAR / KAMERA
 # ==========================
 st.subheader("📸 Pilih Sumber Gambar")
 option = st.radio("Pilih metode input:", ["Unggah Gambar", "Gunakan Kamera"], horizontal=True)
@@ -193,10 +193,4 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ==========================
-# FOOTER
-# ==========================
-st.markdown(
-    '<div class="footer">© 2025 Sistem Deteksi Buaya | Dikembangkan oleh Muhammad Rizki Mulia</div>',
-    unsafe_allow_html=True
-)
+st.markdown('<div class="footer">© 2025 Sistem Deteksi Buaya | Muhammad Rizki Mulia</div>', unsafe_allow_html=True)
