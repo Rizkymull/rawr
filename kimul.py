@@ -15,15 +15,43 @@ st.set_page_config(
 )
 
 # ==========================
-# GAYA TAMPAILAN
+# GAYA TAMPAILAN DENGAN ANIMASI BACKGROUND
 # ==========================
 st.markdown(
     """
     <style>
-    .main { background-color: #f0f8f1; }
-    h1 { color: #006400; text-align: center; font-weight: 800; }
+    /* ===== ANIMATED SWAMP BACKGROUND ===== */
+    body {
+        background: linear-gradient(-45deg, #3b6e47, #204d2e, #264f3b, #3f7753);
+        background-size: 400% 400%;
+        animation: gradientMove 12s ease infinite;
+        color: #111;
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* ===== KONTEN ===== */
+    h1 {
+        color: #eaffea;
+        text-align: center;
+        font-weight: 800;
+        text-shadow: 2px 2px 5px #003300;
+    }
+    .stApp {
+        background: transparent;
+    }
+    .block-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 2rem 3rem;
+        border-radius: 20px;
+        box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    }
     .warning-box {
-        background-color: #ffe6e6;
+        background-color: rgba(255, 230, 230, 0.95);
         padding: 15px;
         border-radius: 12px;
         border-left: 6px solid red;
@@ -33,9 +61,10 @@ st.markdown(
     }
     footer {
         text-align: center;
-        color: gray;
+        color: #f0fff0;
         font-size: 13px;
-        margin-top: 50px;
+        margin-top: 40px;
+        text-shadow: 1px 1px 2px #003300;
     }
     </style>
     """,
@@ -46,7 +75,10 @@ st.markdown(
 # HEADER
 # ==========================
 st.title("🐊 Deteksi & Klasifikasi Jenis Buaya")
-
+st.markdown("""
+Aplikasi ini menggunakan model **YOLOv8** dan **Keras** untuk mendeteksi serta mengenali jenis buaya seperti:
+**Crocodile, Alligator**, dan **Gharial**.
+""")
 
 # ==========================
 # LOAD MODEL
