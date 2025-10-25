@@ -8,95 +8,122 @@ import os
 # ==========================
 # KONFIGURASI HALAMAN
 # ==========================
-st.set_page_config(
-    page_title="Deteksi Buaya - YOLO App",
-    page_icon="🐊",
-    layout="centered",
-)
+st.set_page_config(page_title="Deteksi Buaya YOLOv8", layout="centered")
+st.title("🧠 Sistem Deteksi Buaya YOLOv8")
 
-# ==========================
-# GAYA & BACKGROUND ANIMASI
-# ==========================
+# ==================================
+# 🎨 1️⃣ TAMBAHKAN KODE CSS DI SINI
+# ==================================
 st.markdown("""
 <style>
-/* ===== Background Gambar Bergerak ===== */
+/* ===== Tema Utama ===== */
 body {
-    background-image: url("https://images.unsplash.com/photo-1581093588401-4b62a2e4d0e9?auto=format&fit=crop&w=1800&q=80");
+    background-color: #2e473b;
+    background-image: url("https://images.unsplash.com/photo-1581093588401-4b62a2e4d0e9?auto=format&fit=crop&w=1600&q=80");
     background-size: cover;
     background-attachment: fixed;
-    animation: bgmove 60s linear infinite;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-/* ===== Efek Bergerak ===== */
-@keyframes bgmove {
-    0% { background-position: 0% 0%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 0%; }
-}
-
-/* ===== Lapisan Hijau Transparan ===== */
+/* ===== Overlay lembut agar teks kontras ===== */
 .reportview-container, .main, .block-container {
-    background: rgba(0, 60, 30, 0.5) !important;
-    border-radius: 12px;
-    padding: 1.5em;
-    color: #e8f5e9;
+    background: rgba(46, 71, 59, 0.75) !important;
+    border-radius: 18px;
+    padding: 1.8em;
+    color: #f2f9f3;
 }
 
-/* ===== Judul ===== */
-h1, h2, h3 {
-    color: #c8e6c9;
+/* ===== Judul dengan ornamen rawa ===== */
+h1 {
+    color: #d0e3d1;
+    text-align: center;
+    font-size: 2.5em;
+    padding: 15px;
+    background: rgba(0, 60, 30, 0.5);
+    border-radius: 15px;
+    position: relative;
+}
+h1::before {
+    content: "🐊 ";
+}
+h1::after {
+    content: " 🌿";
+}
+
+/* ===== Subjudul ===== */
+h2, h3 {
+    color: #d0e3d1;
     text-align: center;
 }
 
-/* ===== Alert dan Kontak ===== */
+/* ===== Alert box ===== */
 .alert-box {
-    background-color: rgba(255, 243, 205, 0.85);
+    background-color: rgba(255, 243, 205, 0.9);
     padding: 15px;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid #ffeeba;
     color: #3e2723;
     margin-bottom: 15px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.1);
 }
+
+/* ===== Box Kontak ===== */
 .contact-box {
-    background-color: rgba(212, 237, 218, 0.85);
+    background-color: rgba(208, 227, 209, 0.9);
     padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #c3e6cb;
+    border-radius: 12px;
+    border: 1px solid #a5d6a7;
     color: #1b5e20;
     margin-top: 25px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.contact-box::before {
+    content: "📞 ";
+    font-size: 1.2em;
+    font-weight: bold;
 }
 
 /* ===== Tombol ===== */
 div.stButton > button {
-    background-color: #2e7d32;
+    background-color: #3e8e41;
     color: white;
     border-radius: 10px;
     padding: 0.6em 1.2em;
     font-weight: bold;
     transition: 0.3s;
+    border: none;
 }
 div.stButton > button:hover {
-    background-color: #1b5e20;
+    background-color: #2e7d32;
+    transform: scale(1.05);
+}
+
+/* ===== Radio button ===== */
+.css-1a32fsj div[role='radiogroup'] label {
+    color: #f2f9f3 !important;
 }
 
 /* ===== Footer ===== */
 .footer {
     margin-top: 40px;
     text-align: center;
-    color: #c8e6c9;
+    color: #b2dfdb;
     font-size: 14px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 10px;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ==========================
-# JUDUL
-# ==========================
-st.title("🐊 Deteksi Buaya Menggunakan YOLOv8")
-st.markdown(
-    '<div class="alert-box">⚠️ Jika Anda melihat buaya di sekitar Anda, '
-    '<b>jangan dekati</b>! Segera amankan diri dan laporkan ke pihak berwenang.</div>',
-    unsafe_allow_html=True
+# ============================================
+# 🏞️ 2️⃣ TAMBAHKAN GAMBAR ILUSTRASI DI SINI
+# ============================================
+st.image(
+    "https://png.pngtree.com/png-clipart/20231011/original/pngtree-swamp-landscape-vector-illustration-png-image_13136005.png",
+    use_container_width=True,
+    caption="Habitat alami buaya (ilustrasi)",
+    output_format="PNG"
 )
 
 # ==========================
@@ -122,33 +149,24 @@ def load_models():
 yolo_model, keras_model = load_models()
 
 # ==========================
-# INPUT GAMBAR / KAMERA
+# UPLOAD / KAMERA
 # ==========================
-st.subheader("📸 Pilih Sumber Gambar")
-option = st.radio("Pilih metode input:", ["Unggah Gambar", "Gunakan Kamera"], horizontal=True)
-img = None
+upload_mode = st.radio("Pilih metode input:", ["Unggah Gambar", "Gunakan Kamera"])
 
-if option == "Unggah Gambar":
+if upload_mode == "Unggah Gambar":
     uploaded_file = st.file_uploader("📤 Unggah gambar", type=["jpg", "jpeg", "png"])
-    if uploaded_file:
-        img = Image.open(uploaded_file).convert("RGB")
+else:
+    uploaded_file = st.camera_input("📸 Ambil foto dari kamera")
 
-elif option == "Gunakan Kamera":
-    camera_file = st.camera_input("📷 Ambil gambar menggunakan kamera")
-    if camera_file:
-        img = Image.open(camera_file).convert("RGB")
-
-# ==========================
-# DETEKSI YOLO
-# ==========================
-if img is not None:
+if uploaded_file:
+    img = Image.open(uploaded_file).convert("RGB")
     st.image(img, caption="🖼 Gambar Input", use_container_width=True)
-    st.subheader("🔍 Hasil Deteksi (YOLO)")
 
+    st.subheader("🔍 Hasil Deteksi (YOLO)")
     try:
         results = yolo_model(img)
         annotated_img = results[0].plot()
-        st.image(annotated_img, caption="📦 Hasil Deteksi", use_container_width=True)
+        st.image(annotated_img, caption="Hasil Deteksi", use_container_width=True)
 
         boxes = results[0].boxes
         names = results[0].names
@@ -161,36 +179,24 @@ if img is not None:
             conf = float(best_box.conf[0])
 
             cropped_img = img.crop((x1, y1, x2, y2))
-            st.image(cropped_img, caption="🌿 Area Deteksi (Crop dari YOLO)", use_container_width=True)
+            st.image(cropped_img, caption="🧩 Area Deteksi (Crop dari YOLO)", use_container_width=True)
+            st.success(f"Objek terdeteksi: {yolo_label.upper()} (Akurasi: {conf*100:.2f}%)")
 
-            st.success(f"✅ Objek terdeteksi: **{yolo_label.upper()}** (Akurasi: {conf*100:.2f}%)")
-
-            if "buaya" in yolo_label.lower() or "crocodile" in yolo_label.lower():
-                st.warning("⚠️ Deteksi menunjukkan adanya *buaya*! Jangan dekati dan segera hubungi BKSDA!")
+            # Box kontak BKSDA
+            st.markdown("""
+            <div class='contact-box'>
+            <b>Hubungi BKSDA Terdekat</b><br>
+            Jika Anda menemukan buaya atau satwa liar berbahaya, segera hubungi:<br><br>
+            • <b>BKSDA Kalimantan Selatan:</b> 0813-4829-XXXX<br>
+            • <b>BKSDA Sumatera Selatan:</b> 0821-3456-XXXX<br>
+            • <b>BKSDA Jawa Timur:</b> 0812-7654-XXXX<br><br>
+            🕐 Layanan 24 Jam
+            </div>
+            """, unsafe_allow_html=True)
 
         else:
-            st.info("🚫 Tidak ada objek terdeteksi di gambar ini.")
-
+            st.warning("Tidak ada objek terdeteksi.")
     except Exception as e:
-        st.error(f"❌ Terjadi kesalahan saat deteksi YOLO: {e}")
-
+        st.error(f"❌ Error deteksi YOLO: {e}")
 else:
     st.info("⬆ Silakan unggah gambar atau gunakan kamera terlebih dahulu.")
-
-# ==========================
-# KONTAK BKSDA
-# ==========================
-st.markdown("""
-<div class="contact-box">
-    📞 <b>Hubungi BKSDA Terdekat</b><br>
-    Jika Anda menemukan buaya atau satwa liar berbahaya, segera hubungi:
-    <ul>
-        <li><b>BKSDA Kalimantan Selatan</b>: 0813-4829-XXXX</li>
-        <li><b>BKSDA Sumatera Selatan</b>: 0821-3456-XXXX</li>
-        <li><b>BKSDA Jawa Timur</b>: 0812-7654-XXXX</li>
-    </ul>
-    🕐 Layanan 24 Jam
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown('<div class="footer">© 2025 Sistem Deteksi Buaya | Muhammad Rizki Mulia</div>', unsafe_allow_html=True)
