@@ -9,26 +9,19 @@ import os
 # KONFIGURASI HALAMAN
 # ==========================
 st.set_page_config(
-    page_title="🐊 Deteksi dan Klasifikasi Buaya",
+    page_title="🐊 Deteksi & Klasifikasi Buaya",
     page_icon="🐊",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    layout="centered"
 )
 
 # ==========================
-# GAYA & HEADER
+# GAYA TAMPAILAN
 # ==========================
 st.markdown(
     """
     <style>
-    .main {
-        background-color: #f0f8f1;
-    }
-    h1 {
-        color: #006400;
-        text-align: center;
-        font-weight: 800;
-    }
+    .main { background-color: #f0f8f1; }
+    h1 { color: #006400; text-align: center; font-weight: 800; }
     .warning-box {
         background-color: #ffe6e6;
         padding: 15px;
@@ -49,13 +42,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# ==========================
+# HEADER
+# ==========================
 st.title("🐊 Deteksi & Klasifikasi Jenis Buaya")
-st.markdown(
-    """
-    Aplikasi ini menggunakan model **YOLOv8** dan **Keras** untuk mendeteksi serta mengenali jenis buaya seperti:
-    **Crocodile, Alligator**, dan **Gharial**.
-    """
-)
+st.markdown("""
+Aplikasi ini menggunakan model **YOLOv8** dan **Keras** untuk mendeteksi serta mengenali jenis buaya seperti:
+**Crocodile, Alligator**, dan **Gharial**.
+""")
 
 # ==========================
 # LOAD MODEL
@@ -68,6 +62,7 @@ def load_models():
     if not os.path.exists(yolo_path):
         st.error("❌ Model YOLO (.pt) tidak ditemukan.")
         st.stop()
+
     if not os.path.exists(keras_path):
         st.warning("⚠️ Model Keras (.h5) tidak ditemukan. Hanya YOLO yang digunakan.")
         keras_model = None
@@ -80,24 +75,28 @@ def load_models():
 yolo_model, keras_model = load_models()
 
 # ==========================
-# INPUT GAMBAR / KAMERA
+# PILIH SUMBER GAMBAR
 # ==========================
-st.subheader("📸 Unggah atau Ambil Foto Buaya")
+st.subheader("📸 Pilih Sumber Gambar")
 
-tab1, tab2 = st.tabs(["📤 Upload Gambar", "🎥 Gunakan Kamera"])
+input_mode = st.radio(
+    "Pilih metode input:",
+    ["📤 Upload Foto", "🎥 Gunakan Kamera"],
+    horizontal=True
+)
 
-uploaded_file = tab1.file_uploader("Unggah gambar dari perangkat", type=["jpg", "jpeg", "png"])
-camera_file = tab2.camera_input("Ambil foto menggunakan kamera")
+if input_mode == "📤 Upload Foto":
+    image_file = st.file_uploader("Unggah gambar dari perangkat Anda", type=["jpg", "jpeg", "png"])
+elif input_mode == "🎥 Gunakan Kamera":
+    image_file = st.camera_input("Ambil foto menggunakan kamera")
 
-image_source = uploaded_file or camera_file
-
-if image_source:
-    img = Image.open(image_source).convert("RGB")
+# ==========================
+# PROSES DETEKSI
+# ==========================
+if image_file:
+    img = Image.open(image_file).convert("RGB")
     st.image(img, caption="🖼️ Gambar yang diproses", use_container_width=True)
 
-    # ==========================
-    # YOLO DETECTION
-    # ==========================
     st.subheader("🔍 Hasil Deteksi (YOLO)")
     try:
         results = yolo_model(img)
@@ -137,13 +136,13 @@ if image_source:
             )
 
         else:
-            st.warning("Tidak ada objek buaya yang terdeteksi.")
+            st.warning("Tidak ada objek buaya yang terdeteksi pada gambar.")
 
     except Exception as e:
         st.error(f"❌ Terjadi kesalahan dalam proses deteksi: {e}")
 
 else:
-    st.info("⬆ Silakan unggah gambar atau ambil foto menggunakan kamera.")
+    st.info("⬆ Silakan pilih mode input, lalu unggah atau ambil foto buaya.")
 
 # ==========================
 # FOOTER
@@ -157,3 +156,4 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
