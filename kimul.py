@@ -103,26 +103,35 @@ Segera amankan diri dan hubungi pihak berwenang.
 # ==== ☎ Kontak Resmi ====
 # ==========================
 st.markdown("""
-<div style="background-color:#1e1e1e; padding:15px; border-radius:10px; color:#fff;">
-    <h3 style="color:#ff4b4b; text-align:center;">📞 Panggilan Resmi Satwa & Keamanan</h3>
-    
-    <div class="contact-section" style="margin-top:15px;">
+<div style="
+    background-color:#111;
+    padding:18px;
+    border-radius:10px;
+    color:#fff;
+    font-size:15px;
+    box-shadow:0 0 10px rgba(0,0,0,0.3);
+">
+
+    <!-- BKSDA -->
+    <div style="margin-top:10px;">
         <b>🦎 BKSDA (Balai Konservasi Sumber Daya Alam)</b><br>
         ☎️ 0813-4829-XXXX<br>
         🌐 <a href="https://ksdae.menlhk.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
         📸 <a href="https://www.instagram.com/ksdae.menlhk" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
     <hr style="border:0.5px solid #2ecc71; margin:12px 0;">
-    
-    <div class="contact-section">
+
+    <!-- DAMKAR -->
+    <div>
         <b>🚒 Pemadam Kebakaran (DAMKAR)</b><br>
         ☎️ 113<br>
         🌐 <a href="https://damkar.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
         📸 <a href="https://www.instagram.com/damkarindonesia" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
     <hr style="border:0.5px solid #2ecc71; margin:12px 0;">
-    
-    <div class="contact-section">
+
+    <!-- POLRI -->
+    <div>
         <b>👮 Kepolisian Negara Republik Indonesia (POLRI)</b><br>
         ☎️ 110<br>
         🌐 <a href="https://polri.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
@@ -132,9 +141,9 @@ st.markdown("""
     <p style="margin-top:15px; font-size:14px; color:#eee;">
         ⚠️ <b>Layanan Darurat 24 Jam:</b> Jika menemukan satwa liar berbahaya, segera hubungi pihak berwenang.
     </p>
+
 </div>
 """, unsafe_allow_html=True)
-
 
 # ==========================
 # LOAD MODEL
