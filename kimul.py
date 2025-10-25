@@ -108,7 +108,7 @@ st.markdown("""
     <!-- BKSDA -->
     <div style="margin-top:10px;">
         <b style="color:#7CFC00;">🦎 Balai Konservasi Sumber Daya Alam (BKSDA)</b><br>
-        🌐 <a href="https://ksdae.menlhk.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
+        ☎️ <b>(021)5704501</b><br>
         📸 <a href="https://www.instagram.com/ksdae.menlhk" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
     <hr style="border:0.5px solid #2ecc71; margin:15px 0;">
@@ -116,7 +116,6 @@ st.markdown("""
     <div>
         <b style="color:#FF8C00;">🚒 Pemadam Kebakaran (DAMKAR)</b><br>
         ☎️ <b>113</b><br>
-        🌐 <a href="https://damkar.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
         📸 <a href="https://www.instagram.com/damkarindonesia" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
     <hr style="border:0.5px solid #2ecc71; margin:15px 0;">
@@ -124,7 +123,6 @@ st.markdown("""
     <div>
         <b style="color:#00BFFF;">👮 Kepolisian Negara Republik Indonesia (POLRI)</b><br>
         ☎️ <b>110</b><br>
-        🌐 <a href="https://polri.go.id" target="_blank" style="color:#9efeff;">Website Resmi</a><br>
         📸 <a href="https://www.instagram.com/divisihumaspolri" target="_blank" style="color:#9efeff;">Instagram</a>
     </div>
     <hr style="border:0.5px solid #FFD700; margin:15px 0;">
