@@ -100,19 +100,41 @@ Segera amankan diri dan hubungi pihak berwenang.
 """, unsafe_allow_html=True)
 
 # ==========================
-# ☎️ Kontak BKSDA
+# ☎️ Hubungi
 # ==========================
-st.markdown("""
-<div style='background-color: rgba(0, 70, 30, 0.45);
-            border: 1px solid #2ecc71; padding: 15px; border-radius: 12px;
-            color: #eaffea; font-size: 15px; margin-top: 20px;'>
-<b>📞 Hubungi BKSDA Terdekat:</b><br>
-• BKSDA Kalimantan Selatan: <b>0813-4829-XXXX</b><br>
-• BKSDA Sumatera Selatan: <b>0821-3456-XXXX</b><br>
-• BKSDA Jawa Timur: <b>0812-7654-XXXX</b><br><br>
-<i>Layanan 24 Jam</i>
-</div>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="bksda-box">
+        <h3>📞 Panggilan Resmi Satwa & Keamanan</h3>
+
+        <div class="contact-section">
+            <b>1️⃣ BKSDA (Balai Konservasi Sumber Daya Alam)</b><br>
+            📱 <b>0813-4829-XXXX</b><br>
+            🌐 <a href="https://ksdae.menlhk.go.id" target="_blank" style="color:#9eff9e;">ksdae.menlhk.go.id</a><br>
+            📸 <a href="https://www.instagram.com/ksdae.menlhk" target="_blank" style="color:#9eff9e;">@ksdae.menlhk</a>
+        </div>
+        <hr style="border: 0.5px solid #2ecc71; margin:10px 0;">
+
+        <div class="contact-section">
+            <b>2️⃣ Pemadam Kebakaran (DAMKAR)</b><br>
+            📱 <b>113</b><br>
+            🌐 <a href="https://damkar.go.id" target="_blank" style="color:#9eff9e;">damkar.go.id</a><br>
+            📸 <a href="https://www.instagram.com/damkarindonesia" target="_blank" style="color:#9eff9e;">@damkarindonesia</a>
+        </div>
+        <hr style="border: 0.5px solid #2ecc71; margin:10px 0;">
+
+        <div class="contact-section">
+            <b>3️⃣ Kepolisian Negara Republik Indonesia (POLRI)</b><br>
+            📱 <b>110</b><br>
+            🌐 <a href="https://polri.go.id" target="_blank" style="color:#9eff9e;">polri.go.id</a><br>
+            📸 <a href="https://www.instagram.com/divisihumaspolri" target="_blank" style="color:#9eff9e;">@divisihumaspolri</a>
+        </div>
+
+        <br><i>Layanan Darurat 24 Jam — Jangan dekati satwa liar, segera hubungi pihak berwenang.</i>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # ==========================
 # LOAD MODEL
